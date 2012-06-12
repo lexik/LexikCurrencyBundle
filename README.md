@@ -74,3 +74,40 @@ In the commanda line `ecb` is the value returned by the `getIdentifier()` method
 ```
 ./app/console lexik:currency:import ecb
 ```
+
+Usage
+=====
+
+##### In a twig template
+
+Just use the `currency_format` filter:
+
+```
+{% set targetCurrency = 'EUR' %}
+{{ amount | currency_format(targetCurrency)  }}
+```
+
+You can also pass more arguments, to display or not decimal and the currency symbol. And you can specify the amount's currency if needed.
+
+```
+{% set targetCurrency = 'EUR' %}
+{% set amountCurrency = 'USD' %}
+{% set decimal = false  %}
+{% set symbol = true %}
+
+{{ amount | currency_format(targetCurrency, decimal, symbol, amountCurrency)  }}
+```
+
+##### By using the service
+
+Use the `convert()` method from the `lexik_currency.converter` service:
+
+```php
+<?php
+// by default the amount will rounded and the amount have to be in the default currency
+$convertedAmount = $container->get('lexik_currency.converter')->convert($amount, $targetCurrency);
+
+// here the amount won't be rounded and we specify that $amount currency is 'USD'
+$convertedAmount = $container->get('lexik_currency.converter')->convert($amount, $targetCurrency, false, 'USD');
+```
+
