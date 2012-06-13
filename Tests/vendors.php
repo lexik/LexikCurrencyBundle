@@ -18,6 +18,7 @@ $deps = array(
     array('doctrine-dbal',     'https://github.com/doctrine/dbal.git'),
     array('doctrine',          'https://github.com/doctrine/doctrine2.git'),
     array('doctrine-fixtures', 'https://github.com/doctrine/data-fixtures.git'),
+    array('twig',              'https://github.com/fabpot/Twig.git'),
 );
 
 $revs = array(
@@ -27,6 +28,7 @@ $revs = array(
         'doctrine-dbal'     => '2.1.7',
         'doctrine'          => '2.1.7',
         'doctrine-fixtures' => 'origin/master',
+        'twig'              => 'v1.8.2',
     ),
 );
 
