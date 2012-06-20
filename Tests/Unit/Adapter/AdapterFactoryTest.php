@@ -7,6 +7,8 @@ use Lexik\Bundle\CurrencyBundle\Tests\Unit\BaseUnitTestCase;
 
 class AdapterFactoryTest extends BaseUnitTestCase
 {
+    const CURRENCY_ENTITY = 'Lexik\Bundle\CurrencyBundle\Entity\Currency';
+
     private $em;
 
     public function setUp()
@@ -17,7 +19,7 @@ class AdapterFactoryTest extends BaseUnitTestCase
 
     public function testCreateEcbAdapter()
     {
-        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'));
+        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
         $adapter = $factory->createEcbAdapter();
 
         $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter', $adapter);
@@ -30,7 +32,7 @@ class AdapterFactoryTest extends BaseUnitTestCase
     {
         $this->loadFixtures($this->em);
 
-        $factory = new AdapterFactory($this->em, 'USD', array('EUR'));
+        $factory = new AdapterFactory($this->em, 'USD', array('EUR'), self::CURRENCY_ENTITY);
         $adapter = $factory->createDoctrineAdapter();
 
         $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter', $adapter);

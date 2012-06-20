@@ -8,6 +8,8 @@ use Lexik\Bundle\CurrencyBundle\Tests\Unit\BaseUnitTestCase;
 
 class ConverterTest extends BaseUnitTestCase
 {
+    const CURRENCY_ENTITY = 'Lexik\Bundle\CurrencyBundle\Entity\Currency';
+
     private $em;
 
     private $adapter;
@@ -18,7 +20,7 @@ class ConverterTest extends BaseUnitTestCase
         $this->createSchema($this->em);
         $this->loadFixtures($this->em);
 
-        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'));
+        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
         $this->adapter = $factory->createDoctrineAdapter();
     }
 
