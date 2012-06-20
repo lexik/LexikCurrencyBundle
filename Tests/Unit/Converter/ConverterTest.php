@@ -18,7 +18,7 @@ class ConverterTest extends BaseUnitTestCase
         $this->createSchema($this->em);
         $this->loadFixtures($this->em);
 
-        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'));
+        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'), 'Lexik\Bundle\CurrencyBundle\Entity\Currency');
         $this->adapter = $factory->createDoctrineAdapter();
     }
 
