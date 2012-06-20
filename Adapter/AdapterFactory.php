@@ -23,17 +23,23 @@ class AdapterFactory
     private $currencies;
 
     /**
+     * @var string
+     */
+    private $currencyClass;
+
+    /**
      * __construct
      *
      * @param EntityManager $em
      */
-    public function __construct(EntityManager $em, $defaultCurrency, $availableCurrencies)
+    public function __construct(EntityManager $em, $defaultCurrency, $availableCurrencies, $currencyClass)
     {
         $this->em = $em;
 
         $this->currencies = array();
         $this->currencies['default'] = $defaultCurrency;
         $this->currencies['managed'] = $availableCurrencies;
+        $this->currencyClass = $currencyClass;
     }
 
     /**
@@ -47,6 +53,7 @@ class AdapterFactory
         $adapter = new $adapterClass();
         $adapter->setDefaultCurrency($this->currencies['default']);
         $adapter->setManagedCurrencies($this->currencies['managed']);
+        $adapter->setCurrencyClass($this->currencyClass);
 
         return $adapter;
     }
@@ -65,7 +72,7 @@ class AdapterFactory
         $adapter = $this->create($adapterClass);
 
         $currencies = $this->em
-            ->getRepository('Lexik\Bundle\CurrencyBundle\Entity\Currency')
+            ->getRepository($this->currencyClass)
             ->findAll();
 
         foreach ($currencies as $currency) {

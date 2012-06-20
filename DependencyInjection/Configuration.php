@@ -39,6 +39,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
 
+                ->scalarNode('currency_class')
+                    ->cannotBeEmpty()
+                    ->defaultValue('Lexik\Bundle\CurrencyBundle\Entity\Currency')
+                ->end()
+
                 ->scalarNode('default_adapter')
                     ->cannotBeEmpty()
                     ->defaultValue('doctrine_currency_adapter') // service id OR tag alias
