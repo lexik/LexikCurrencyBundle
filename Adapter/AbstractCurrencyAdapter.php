@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
-use Lexik\Bundle\CurrencyBundle\Entity\Currency;
-
 /**
  *
  * @author Cédric Girard <c.girard@lexik.fr>
@@ -62,6 +60,16 @@ abstract class AbstractCurrencyAdapter extends \ArrayIterator
     }
 
     /**
+     * Get managedCurrencies
+     *
+     * @return array
+     */
+    public function setCurrencyClass($currencyClass)
+    {
+        return $this->currencyClass = $currencyClass;
+    }
+
+    /**
      * Set object
      *
      * @param mixed $index
@@ -69,7 +77,7 @@ abstract class AbstractCurrencyAdapter extends \ArrayIterator
      */
     public function offsetSet ($index, $newval)
     {
-        if (!$newval instanceof Currency) {
+        if (!$newval instanceof $this->currencyClass) {
             throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', get_class($newval)));
         }
 
@@ -83,7 +91,7 @@ abstract class AbstractCurrencyAdapter extends \ArrayIterator
      */
     public function append($value)
     {
-        if (!$value instanceof Currency) {
+        if (!$value instanceof $this->currencyClass) {
             throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', get_class($value)));
         }
 

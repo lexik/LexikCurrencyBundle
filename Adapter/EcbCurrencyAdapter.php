@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
-use Lexik\Bundle\CurrencyBundle\Entity\Currency;
-
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -35,7 +33,7 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
         $defaultRate = 1;
 
         // Add euro
-        $euro = new Currency();
+        $euro = new $this->currencyClass;
         $euro->setCode('EUR');
         $euro->setRate(1);
 
@@ -53,7 +51,7 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
 
             foreach ($datas as $data) {
                 if (in_array($data[0], $this->managedCurrencies)) {
-                    $currency = new Currency();
+                    $currency = new $this->currencyClass;
                     $currency->setCode($data[0]);
                     $currency->setRate($data[1]);
 

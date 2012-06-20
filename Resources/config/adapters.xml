@@ -21,6 +21,7 @@
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument>%lexik_currency.currencies.default%</argument>
             <argument>%lexik_currency.currencies.managed%</argument>
+            <argument>%lexik_currency.currency_class%</argument>
         </service>
 
         <!-- Adapters -->

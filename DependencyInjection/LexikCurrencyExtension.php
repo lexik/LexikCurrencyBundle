@@ -25,6 +25,7 @@ class LexikCurrencyExtension extends Extension
         $loader->load('adapters.xml');
 
         $container->setParameter('lexik_currency.currencies.default', $config['currencies']['default']);
+        $container->setParameter('lexik_currency.currency_class', $config['currency_class']);
         $container->setParameter('lexik_currency.default_adapter', $config['default_adapter']);
         $container->setParameter('lexik_currency.ecb_url', $config['ecb_url']);
 
