@@ -40,7 +40,7 @@ class ImportCurrencyCommand extends ContainerAwareCommand
 
         // Persist currencies
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('Lexik\Bundle\CurrencyBundle\Entity\Currency');
+        $repository = $em->getRepository($this->getContainer()->getParameter('lexik_currency.currency_class'));
 
         foreach ($adapter as $value) {
             // Check if already exist

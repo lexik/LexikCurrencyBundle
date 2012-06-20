@@ -57,6 +57,7 @@ lexik_currency:
     currencies:
         default: EUR                            # [required] the default currency
         managed: [EUR]                          # [required] all currencies used in your app
+	currency_class: Lexik\Bundle\CurrencyBundle\Entity\Currency  # Use your custom Currency Entity
     default_adapter: doctrine_currency_adapter  # service id OR tag alias
 ```
 
