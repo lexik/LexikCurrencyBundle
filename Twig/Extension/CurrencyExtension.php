@@ -2,11 +2,10 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Twig\Extension;
 
-use InvalidArgumentException, NumberFormatter;
 use Lexik\Bundle\CurrencyBundle\Adapter\AdapterCollector;
 use Lexik\Bundle\CurrencyBundle\Converter\Converter;
-use Lexik\Bundle\CurrencyBundle\Exception\NotFoundException;
-use Symfony\Component\HttpFoundation\Session;
+use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
@@ -21,19 +20,19 @@ class CurrencyExtension extends \Twig_Extension
     private $converter;
 
     /**
-     * @var Session
+     * @var Translator
      */
-    private $session;
+    private $translator;
 
     /**
      * Construct.
      *
-     * @param Session $session
+     * @param Translator $translator
      * @param Converter $converter
      */
-    public function __construct(Session $session, Converter $converter)
+    public function __construct(Translator $translator, Converter $converter)
     {
-        $this->session = $session;
+        $this->translator = $translator;
         $this->converter = $converter;
     }
 
@@ -59,11 +58,11 @@ class CurrencyExtension extends \Twig_Extension
      */
     public function currencyFormat($value, $code, $decimal = true, $symbol = true, $valueCode = null)
     {
-        $formatter = new NumberFormatter($this->session->getLocale(), $symbol ? NumberFormatter::CURRENCY : NumberFormatter::PATTERN_DECIMAL);
+        $formatter = new \NumberFormatter($this->translator->getLocale(), $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
 
         try {
             $value = $this->converter->convert($value, $code, !$decimal, $valueCode);
-        } catch (NotFoundException $e) {
+        } catch (CurrencyNotFoundException $e) {
             $code = $this->converter->getDefaultCurrency();
         }
 
