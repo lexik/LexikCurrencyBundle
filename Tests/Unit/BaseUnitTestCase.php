@@ -51,11 +51,9 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
         $cache = new \Doctrine\Common\Cache\ArrayCache();
 
         // xml driver
-        $prefixes = array(
-            'Lexik\Bundle\CurrencyBundle\Entity' => __DIR__.'/../../Resources/config/doctrine'
-        );
-        $xmlDriver = new \Symfony\Bridge\Doctrine\Mapping\Driver\XmlDriver(array_values($prefixes));
-        $xmlDriver->setNamespacePrefixes(array_flip($prefixes));
+        $xmlDriver = new \Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver(array(
+            __DIR__.'/../../Resources/config/doctrine' => 'Lexik\Bundle\CurrencyBundle\Entity',
+        ));
 
         // configuration mock
         $config = $this->getMock('Doctrine\ORM\Configuration');
@@ -80,6 +78,9 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
         $config->expects($this->any())
             ->method('getClassMetadataFactoryName')
             ->will($this->returnValue('Doctrine\ORM\Mapping\ClassMetadataFactory'));
+        $config->expects($this->any())
+            ->method('getDefaultRepositoryClassName')
+            ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'));
 
         $conn = array(
             'driver' => 'pdo_sqlite',

@@ -22,13 +22,13 @@ $deps = array(
 );
 
 $revs = array(
-    'v2.0.15' => array(
-        'symfony'           => 'v2.0.15',
-        'doctrine-common'   => '2.1.4',
-        'doctrine-dbal'     => '2.1.7',
-        'doctrine'          => '2.1.7',
+    'v2.1' => array(
+        'symfony'           => 'v2.1.0-RC1',
+        'doctrine-common'   => '2.2.3',
+        'doctrine-dbal'     => '2.2.3',
+        'doctrine'          => '2.2.3',
         'doctrine-fixtures' => 'origin/master',
-        'twig'              => 'v1.8.2',
+        'twig'              => 'v1.9.1',
     ),
 );
 
