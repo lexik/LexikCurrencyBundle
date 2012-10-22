@@ -5,7 +5,7 @@ namespace Lexik\Bundle\CurrencyBundle\Twig\Extension;
 use Lexik\Bundle\CurrencyBundle\Adapter\AdapterCollector;
 use Lexik\Bundle\CurrencyBundle\Converter\Converter;
 use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
@@ -13,24 +13,23 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
  */
 class CurrencyExtension extends \Twig_Extension
 {
-
     /**
      * @var Converter
      */
     private $converter;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
     /**
      * Construct.
      *
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      * @param Converter $converter
      */
-    public function __construct(Translator $translator, Converter $converter)
+    public function __construct(TranslatorInterface $translator, Converter $converter)
     {
         $this->translator = $translator;
         $this->converter = $converter;
