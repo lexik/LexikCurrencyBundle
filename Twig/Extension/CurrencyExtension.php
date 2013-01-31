@@ -48,27 +48,26 @@ class CurrencyExtension extends \Twig_Extension
     /**
      * Format price
      *
-     * @param mixed $value
-     * @param string $code - target code
-     * @param boolean $decimal
-     * @param boolean $symbol
-     * @param string $valueCode - the $value's code
+     * @param mixed   $value
+     * @param string  $code      target currency code
+     * @param boolean $decimal   show decimal part
+     * @param boolean $symbol    show currency symbol
+     * @param string  $valueCode the $value currency code
      * @return string
      */
     public function currencyFormat($value, $code, $decimal = true, $symbol = true, $valueCode = null)
     {
-        $formatter = new \NumberFormatter($this->translator->getLocale(), $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
-
         try {
-            $value = $this->converter->convert($value, $code, !$decimal, $valueCode);
+            $value = $this->converter->convert($value, $code, true, $valueCode);
         } catch (CurrencyNotFoundException $e) {
             $code = $this->converter->getDefaultCurrency();
         }
 
+        $formatter = new \NumberFormatter($this->translator->getLocale(), $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
         $value = $formatter->formatCurrency($value, $code);
 
         if (!$decimal) {
-            $value = preg_replace('/[.,]00((?=\D)|$)/','',$value);
+            $value = preg_replace('/[.,][0-9]*((?=\D)|$)/', '', $value);
         }
 
         $value = str_replace(array('EU', 'UK', 'US'), '', $value);
