@@ -30,6 +30,11 @@ class ConverterTest extends BaseUnitTestCase
 
         $this->assertEquals(11.27, $converter->convert(8.666, 'USD'));
         $this->assertEquals(8.67, $converter->convert(8.666, 'EUR'));
+
+        $converter = new Converter($this->adapter, 3);
+
+        $this->assertEquals(11.266, $converter->convert(8.666, 'USD'));
+        $this->assertEquals(8.666, $converter->convert(8.666, 'EUR'));
     }
 
     public function testConvertNotRounded()
