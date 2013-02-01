@@ -8,31 +8,22 @@ This Symfony2 bundle provide a service and a twig extension to convert and displ
 Installation
 ============
 
-Update your `deps` and `deps.lock` files:
+Add the bunde to your `composer.json` file:
 
-```
-// deps
-...
-[LexikCurrencyBundle]
-    git=https://github.com/lexik/LexikCurrencyBundle.git
-    target=bundles/Lexik/Bundle/CurrencyBundle
-```
-
-```
-// deps.lock
-...
-LexikCurrencyBundle <commit>
-```
-
-Register the namespaces with the autoloader:
-
-```
-// app/autoload.php
- $loader->registerNamespaces(array(
+```javascript
+require: {
     // ...
-    'Lexik' => __DIR__.'/../vendor/bundles',
+    "lexik/currency-bundle": "v1.1.*"
     // ...
-));
+}
+```
+
+Then run a composer update:
+
+```shell
+composer.phar update
+# OR
+composer.phar update lexik/currency-bundle # to only update the bundle
 ```
 
 Register the bundle with your kernel:
@@ -49,14 +40,24 @@ $bundles = array(
 Configuration
 =============
 
-This is the full configartion tree with the default values:
+Minimun configuration:
 
 ```yaml
 # app/config/config.yml
 lexik_currency:
     currencies:
-        default: EUR                            # [required] the default currency
-        managed: [EUR]                          # [required] all currencies used in your app
+        default: EUR             # [required] the default currency
+        managed: [EUR, USD, ...]  # [required] all currencies used in your app
+```
+
+Additonal options (default values are shown here):
+       
+```yaml
+# app/config/config.yml
+lexik_currency:
+    decimal_part:
+        precision:  2                           # number of digits for the decimal part
+        round_mode: up                          # round mode to use (up|down|even|odd)
 	currency_class: Lexik\Bundle\CurrencyBundle\Entity\Currency  # Use your custom Currency Entity
     default_adapter: doctrine_currency_adapter  # service id OR tag alias
 ```
@@ -80,27 +81,7 @@ In the commanda line `ecb` is the value returned by the `getIdentifier()` method
 Usage
 =====
 
-##### In a twig template
-
-Just use the `currency_format` filter:
-
-```
-{% set targetCurrency = 'EUR' %}
-{{ amount | currency_format(targetCurrency)  }}
-```
-
-You can also pass more arguments, to display or not decimal and the currency symbol. And you can specify the amount's currency if needed.
-
-```
-{% set targetCurrency = 'EUR' %}
-{% set amountCurrency = 'USD' %}
-{% set decimal = false  %}
-{% set symbol = true %}
-
-{{ amount | currency_format(targetCurrency, decimal, symbol, amountCurrency)  }}
-```
-
-##### By using the service
+##### Currency conversion service
 
 Use the `convert()` method from the `lexik_currency.converter` service:
 
@@ -113,3 +94,29 @@ $convertedAmount = $container->get('lexik_currency.converter')->convert($amount,
 $convertedAmount = $container->get('lexik_currency.converter')->convert($amount, $targetCurrency, false, 'USD');
 ```
 
+##### Twig filters
+
+The bundle provide 3 filters to convert and format a value:
+* `currency_convert`: convert a value.
+* `currency_format`: format a value according to the current locale.
+* `currency_modify`: convert and format a value.
+
+**The `currency_modify` was formerly named `currency_format` when this filter was the only one provided by the bundle.**
+
+Here an example with the `currency_modify` filter.
+
+```
+{% set targetCurrency = 'EUR' %}
+{{ amount | currency_modify(targetCurrency) }}
+```
+
+You can also pass more arguments, to display or not decimal and the currency symbol. And you can specify the amount's currency if needed.
+
+```
+{% set targetCurrency = 'EUR' %}
+{% set amountCurrency = 'USD' %}
+{% set decimal = false %}
+{% set symbol = true %}
+
+{{ amount | currency_modify(targetCurrency, decimal, symbol, amountCurrency) }}
+```
