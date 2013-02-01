@@ -33,13 +33,32 @@ class CurrencyExtensionTest extends BaseUnitTestCase
             ->will($this->returnValue('fr'));
     }
 
-    public function testCurrencyFormat()
+    public function testConvert()
     {
         $extension = new CurrencyExtension($this->translator, $this->converter);
 
-        $this->assertEquals('11,27 $', $extension->currencyFormat(8.666, 'USD'));
-        $this->assertEquals('11 $', $extension->currencyFormat(8.666, 'USD', false));
-        $this->assertEquals('11', $extension->currencyFormat(8.666, 'USD', false, false));
-        $this->assertEquals('8,67', $extension->currencyFormat(8.666, 'USD', true, false, 'USD'));
+        $this->assertEquals(11.27, $extension->convert(8.666, 'USD'));
+        $this->assertEquals(8.67, $extension->convert(8.666, 'EUR'));
+    }
+
+    public function testFormat()
+    {
+        $extension = new CurrencyExtension($this->translator, $this->converter);
+
+        $this->assertEquals('8,67 €', $extension->format(8.666));
+        $this->assertEquals('8,67 €', $extension->format(8.666, 'EUR'));
+        $this->assertEquals('8,67 $', $extension->format(8.666, 'USD'));
+        $this->assertEquals('8 $', $extension->format(8.666, 'USD', false));
+        $this->assertEquals('8', $extension->format(8.666, 'USD', false, false));
+    }
+
+    public function testConvertAndFormat()
+    {
+        $extension = new CurrencyExtension($this->translator, $this->converter);
+
+        $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD'));
+        $this->assertEquals('11 $', $extension->convertAndFormat(8.666, 'USD', false));
+        $this->assertEquals('11', $extension->convertAndFormat(8.666, 'USD', false, false));
+        $this->assertEquals('8,67', $extension->convertAndFormat(8.666, 'USD', true, false, 'USD'));
     }
 }
