@@ -8,31 +8,22 @@ This Symfony2 bundle provide a service and a twig extension to convert and displ
 Installation
 ============
 
-Update your `deps` and `deps.lock` files:
+Add the bunde to your `composer.json` file:
 
-```
-// deps
-...
-[LexikCurrencyBundle]
-    git=https://github.com/lexik/LexikCurrencyBundle.git
-    target=bundles/Lexik/Bundle/CurrencyBundle
-```
-
-```
-// deps.lock
-...
-LexikCurrencyBundle <commit>
-```
-
-Register the namespaces with the autoloader:
-
-```
-// app/autoload.php
- $loader->registerNamespaces(array(
+```javascript
+require: {
     // ...
-    'Lexik' => __DIR__.'/../vendor/bundles',
+    "lexik/currency-bundle": "v1.1.*"
     // ...
-));
+}
+```
+
+Then run a composer update:
+
+```shell
+composer.phar update
+# OR
+composer.phar update lexik/currency-bundle # to only update the bundle
 ```
 
 Register the bundle with your kernel:
