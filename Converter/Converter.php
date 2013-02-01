@@ -38,7 +38,7 @@ class Converter
         $allowedModes = array('up', 'down', 'even', 'odd');
 
         if (!in_array($roundMode, $allowedModes)) {
-            throw new \InvalidArgumentException(sprintf('Invalid round mode "%s", please use one off the follwing values: %s', $roundMode, implode(', ', $allowedModes)));
+            throw new \InvalidArgumentException(sprintf('Invalid round mode "%s", please use one off the following values: %s', $roundMode, implode(', ', $allowedModes)));
         }
 
         $this->adapter = $adapter;
