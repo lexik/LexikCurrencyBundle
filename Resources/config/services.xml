@@ -18,6 +18,8 @@
         
         <service id="lexik_currency.converter" class="%lexik_currency.converter.class%">
             <argument type="service" id="lexik_currency.default_adapter" />
+            <argument>%lexik_currency.decimal_part.precision%</argument>
+            <argument>%lexik_currency.decimal_part.round_mode%</argument>
         </service>
     </services>
     
