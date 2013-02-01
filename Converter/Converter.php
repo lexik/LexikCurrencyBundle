@@ -6,6 +6,8 @@ use Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter;
 use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
 
 /**
+ * Currency converter.
+ *
  * @author Cédric Girard <c.girard@lexik.fr>
  * @author Yoann Aparici <y.aparici@lexik.fr>
  */
@@ -38,7 +40,7 @@ class Converter
         $allowedModes = array('up', 'down', 'even', 'odd');
 
         if (!in_array($roundMode, $allowedModes)) {
-            throw new \InvalidArgumentException(sprintf('Invalid round mode "%s", please use one off the following values: %s', $roundMode, implode(', ', $allowedModes)));
+            throw new \InvalidArgumentException(sprintf('Invalid round mode "%s", please use one of the following values: %s', $roundMode, implode(', ', $allowedModes)));
         }
 
         $this->adapter = $adapter;

@@ -105,7 +105,7 @@ $convertedAmount = $container->get('lexik_currency.converter')->convert($amount,
 
 ##### Twig filters
 
-The bundle provide 3 filter to convert and format a value:
+The bundle provide 3 filters to convert and format a value:
 * `currency_convert`: convert a value.
 * `currency_format`: format a value according to the current locale.
 * `currency_modify`: convert and format a value.
@@ -116,7 +116,7 @@ Here an example with the `currency_modify` filter.
 
 ```
 {% set targetCurrency = 'EUR' %}
-{{ amount | currency_modify(targetCurrency)  }} {#  #}
+{{ amount | currency_modify(targetCurrency) }}
 ```
 
 You can also pass more arguments, to display or not decimal and the currency symbol. And you can specify the amount's currency if needed.
@@ -124,8 +124,8 @@ You can also pass more arguments, to display or not decimal and the currency sym
 ```
 {% set targetCurrency = 'EUR' %}
 {% set amountCurrency = 'USD' %}
-{% set decimal = false  %}
+{% set decimal = false %}
 {% set symbol = true %}
 
-{{ amount | currency_modify(targetCurrency, decimal, symbol, amountCurrency)  }}
+{{ amount | currency_modify(targetCurrency, decimal, symbol, amountCurrency) }}
 ```
