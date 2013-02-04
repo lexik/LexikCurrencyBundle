@@ -18,6 +18,8 @@ require: {
 }
 ```
 
+**As of version `1.2.0`, `currency_format` does not convert the currency anymore, it only formats the given value according to the locale. If you need to convert and format a value, please use `currency_convert_format` filter.**
+
 Then run a composer update:
 
 ```shell
@@ -46,7 +48,7 @@ Minimun configuration:
 # app/config/config.yml
 lexik_currency:
     currencies:
-        default: EUR             # [required] the default currency
+        default: EUR              # [required] the default currency
         managed: [EUR, USD, ...]  # [required] all currencies used in your app
 ```
 
@@ -99,15 +101,13 @@ $convertedAmount = $container->get('lexik_currency.converter')->convert($amount,
 The bundle provide 3 filters to convert and format a value:
 * `currency_convert`: convert a value.
 * `currency_format`: format a value according to the current locale.
-* `currency_modify`: convert and format a value.
+* `currency_convert_format`: convert and format a value.
 
-**The `currency_modify` was formerly named `currency_format` when this filter was the only one provided by the bundle.**
-
-Here an example with the `currency_modify` filter.
+Here an example with the `currency_convert_format` filter.
 
 ```
 {% set targetCurrency = 'EUR' %}
-{{ amount | currency_modify(targetCurrency) }}
+{{ amount | currency_convert_format(targetCurrency) }}
 ```
 
 You can also pass more arguments, to display or not decimal and the currency symbol. And you can specify the amount's currency if needed.
@@ -118,5 +118,5 @@ You can also pass more arguments, to display or not decimal and the currency sym
 {% set decimal = false %}
 {% set symbol = true %}
 
-{{ amount | currency_modify(targetCurrency, decimal, symbol, amountCurrency) }}
+{{ amount | currency_convert_format(targetCurrency, decimal, symbol, amountCurrency) }}
 ```
