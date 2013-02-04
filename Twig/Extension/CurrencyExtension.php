@@ -2,9 +2,7 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Twig\Extension;
 
-use Lexik\Bundle\CurrencyBundle\Adapter\AdapterCollector;
 use Lexik\Bundle\CurrencyBundle\Converter\Converter;
-use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
 
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -44,9 +42,9 @@ class CurrencyExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'currency_convert' => new \Twig_Filter_Method($this, 'convert'),
-            'currency_format'  => new \Twig_Filter_Method($this, 'format'),
-            'currency_modify'  => new \Twig_Filter_Method($this, 'convertAndFormat'),
+            'currency_convert'        => new \Twig_Filter_Method($this, 'convert'),
+            'currency_format'         => new \Twig_Filter_Method($this, 'format'),
+            'currency_convert_format' => new \Twig_Filter_Method($this, 'convertAndFormat'),
         );
     }
 
@@ -83,7 +81,7 @@ class CurrencyExtension extends \Twig_Extension
         $value = $formatter->formatCurrency($value, $valueCurrency);
 
         if (!$decimal) {
-            $value = preg_replace('/[.,][0-9]*((?=\D)|$)/', '', $value);
+            $value = preg_replace('/[.,]00((?=\D)|$)/', '', $value);
         }
 
         $value = str_replace(array('EU', 'UK', 'US'), '', $value);

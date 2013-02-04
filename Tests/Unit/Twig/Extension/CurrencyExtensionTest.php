@@ -48,8 +48,10 @@ class CurrencyExtensionTest extends BaseUnitTestCase
         $this->assertEquals('8,67 €', $extension->format(8.666));
         $this->assertEquals('8,67 €', $extension->format(8.666, 'EUR'));
         $this->assertEquals('8,67 $', $extension->format(8.666, 'USD'));
-        $this->assertEquals('8 $', $extension->format(8.666, 'USD', false));
-        $this->assertEquals('8', $extension->format(8.666, 'USD', false, false));
+        $this->assertEquals('8 $', $extension->format(8.0, 'USD', false));
+        $this->assertEquals('8,666', $extension->format(8.666, 'USD', false, false));
+        $this->assertEquals('8', $extension->format(8.0, 'USD', true, false));
+        $this->assertEquals('8 $', $extension->format(8.0, 'USD', false, true));
     }
 
     public function testConvertAndFormat()
@@ -57,8 +59,11 @@ class CurrencyExtensionTest extends BaseUnitTestCase
         $extension = new CurrencyExtension($this->translator, $this->converter);
 
         $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD'));
-        $this->assertEquals('11 $', $extension->convertAndFormat(8.666, 'USD', false));
-        $this->assertEquals('11', $extension->convertAndFormat(8.666, 'USD', false, false));
+        $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD', false));
+        $this->assertEquals('11,2658', $extension->convertAndFormat(8.666, 'USD', false, false));
         $this->assertEquals('8,67', $extension->convertAndFormat(8.666, 'USD', true, false, 'USD'));
+        $this->assertEquals('8', $extension->convertAndFormat(8.0, 'USD', true, false, 'USD'));
+        $this->assertEquals('8,00 $', $extension->convertAndFormat(8.0, 'USD', true, true, 'USD'));
+        $this->assertEquals('8 $', $extension->convertAndFormat(8.0, 'USD', false, true, 'USD'));
     }
 }
