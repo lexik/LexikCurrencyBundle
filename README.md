@@ -61,7 +61,7 @@ lexik_currency:
         precision:  2                           # number of digits for the decimal part
         round_mode: up                          # round mode to use (up|down|even|odd)
 	currency_class: Lexik\Bundle\CurrencyBundle\Entity\Currency  # Use your custom Currency Entity
-    default_adapter: doctrine_currency_adapter  # service id OR tag alias
+    default_adapter: doctrine_currency_adapter  # service id OR tag alias, this is adapter used by the conversion service
 ```
 
 Initialize currencies
@@ -119,4 +119,83 @@ You can also pass more arguments, to display or not decimal and the currency sym
 {% set symbol = true %}
 
 {{ amount | currency_convert_format(targetCurrency, decimal, symbol, amountCurrency) }}
+```
+
+##### Load conversions rate from another source (custom CurrencyAdatpter)
+
+If you need to load conversions rates from another source you will have to create a CurrencyAdatpter and set it as the default adapter.
+
+To create your custom adapter you will have to extend `Lexik\Bundle\CurrencyBundle\Adapte\AbstractCurrencyAdapter` which define 2 abstract methods:
+* getIdentifier(): returns the identifier of the adapter. 
+* attachAll(): loads the currencies with their rate (this method is call from the import command to get all currencies to save in the database).
+
+Here an example
+
+```php
+<?php
+
+namespace MyProject\With\Some\Rainbows;
+
+use Lexik\Bundle\CurrencyBundle\Adapte\AbstractCurrencyAdapter;
+
+class RainbowCurrencyAdapter extends AbstractCurrencyAdapter
+{
+	/**
+     * {@inheritdoc}
+     */
+    public function attachAll()
+    {
+    	$defaultRate = 1;
+
+        // Add default currency (euro in this example)
+        $euro = new $this->currencyClass;
+        $euro->setCode('EUR');
+        $euro->setRate($defaultRate);
+
+        $this[$euro->getCode()] = $euro;
+
+        // Get other currencies
+        $currencies = // get all currencies with their rate (from a file, an url, etc)
+
+        foreach ($currencies as $code => $rate) {
+            if (in_array($code, $this->managedCurrencies)) { // you can check if the currency is in the managed currencies
+                $currency = new $this->currencyClass;
+                $currency->setCode($code);
+                $currency->setRate($rate]);
+
+                $this[$currency->getCode()] = $currency;
+            }
+        }
+
+        // get the default rate from the default currency defined in the configuration
+        if (isset($this[$this->defaultCurrency])) {
+            $defaultRate = $this[$this->defaultCurrency]->getRate();
+        }
+
+        // convert rates according to the default one.
+        $this->convertAll($defaultRate);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return 'rainbow';
+    }
+}
+```
+
+Then define the adapter as a service, don't forget the `lexik_currency.adapter` tag:
+
+```xml
+<service id="my_project.rainbow_currency_adapter" class="MyProject\With\Some\Rainbows\RainbowCurrencyAdapter">
+    <tag name="lexik_currency.adapter" alias="rainbow_currency_adapter" />
+</service>
+```
+
+And import the currencies by using your adapter:
+
+```
+./app/console lexik:currency:import rainbow
 ```
