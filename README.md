@@ -13,7 +13,7 @@ Add the bunde to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/currency-bundle": "v1.1.*"
+    "lexik/currency-bundle": "1.1.*"
     // ...
 }
 ```
