@@ -96,6 +96,14 @@ $convertedAmount = $container->get('lexik_currency.converter')->convert($amount,
 $convertedAmount = $container->get('lexik_currency.converter')->convert($amount, $targetCurrency, false, 'USD');
 ```
 
+##### Retrieve managed configurations
+
+In the controller, you can use the following line to retrieve an array of all managed currencies:
+
+```php
+$managedCurrencies = $this->container->getParameter('lexik_currency.currencies.managed');
+```
+
 ##### Twig filters
 
 The bundle provide 3 filters to convert and format a value:
