@@ -25,6 +25,7 @@ class ImportCurrencyCommand extends ContainerAwareCommand
             ->setName('lexik:currency:import')
             ->setDescription('Import currency rate')
             ->addArgument('adapter', InputArgument::REQUIRED, 'Adapter to import in database')
+            ->addOption('em', null, InputOption::VALUE_OPTIONAL, 'The entity manager to use for this command')
         ;
     }
 
@@ -39,7 +40,9 @@ class ImportCurrencyCommand extends ContainerAwareCommand
         $adapter->attachAll();
 
         // Persist currencies
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $entityManagerName = $input->getOption('em');
+        $em = $this->getContainer()->get('doctrine')->getEntityManager($entityManagerName);
+
         $repository = $em->getRepository($this->getContainer()->getParameter('lexik_currency.currency_class'));
 
         foreach ($adapter as $value) {

@@ -9,17 +9,19 @@ class AdapterFactoryTest extends BaseUnitTestCase
 {
     const CURRENCY_ENTITY = 'Lexik\Bundle\CurrencyBundle\Entity\Currency';
 
+    private $container;
     private $em;
 
     public function setUp()
     {
-        $this->em = $this->getMockSqliteEntityManager();
+        $this->container = $this->getMockContainer();
+        $this->em = $this->container->get('doctrine')->getEntityManager();
         $this->createSchema($this->em);
     }
 
     public function testCreateEcbAdapter()
     {
-        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
+        $factory = new AdapterFactory($this->container, null, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
         $adapter = $factory->createEcbAdapter();
 
         $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter', $adapter);
@@ -32,7 +34,7 @@ class AdapterFactoryTest extends BaseUnitTestCase
     {
         $this->loadFixtures($this->em);
 
-        $factory = new AdapterFactory($this->em, 'USD', array('EUR'), self::CURRENCY_ENTITY);
+        $factory = new AdapterFactory($this->container, null, 'USD', array('EUR'), self::CURRENCY_ENTITY);
         $adapter = $factory->createDoctrineAdapter();
 
         $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter', $adapter);

@@ -10,7 +10,8 @@
         <parameter key="lexik_currency.abstract_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter</parameter>
         <parameter key="lexik_currency.ecb_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter</parameter>
         <parameter key="lexik_currency.doctrine_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter</parameter>
-    </parameters>    
+        <parameter key="lexik_currency.doctrine.orm.entity_manager">default</parameter>
+    </parameters>
 
     <services>
         <!-- Adapter collector -->
@@ -18,7 +19,8 @@
 
         <!-- Factory -->
         <service id="lexik_currency.adapter_factory" class="%lexik_currency.adapter_factory.class%">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="service_container" />
+            <argument>%lexik_currency.doctrine.orm.entity_manager%</argument>
             <argument>%lexik_currency.currencies.default%</argument>
             <argument>%lexik_currency.currencies.managed%</argument>
             <argument>%lexik_currency.currency_class%</argument>

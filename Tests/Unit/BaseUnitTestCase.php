@@ -95,4 +95,25 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
 
         return $em;
     }
+
+    protected function getMockContainer()
+    {
+        $em = $this->getMockSqliteEntityManager();
+
+        $doctrine = $this->getMockBuilder('Doctrine\Bundle\DoctrineBundle\Registry')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $doctrine->expects($this->any())
+            ->method('getEntityManager')
+            ->will($this->returnValue($em));
+
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container->expects($this->any())
+            ->method('get')
+            ->with($this->equalTo('doctrine'))
+            ->will($this->returnValue($doctrine));
+
+        return $container;
+    }
 }

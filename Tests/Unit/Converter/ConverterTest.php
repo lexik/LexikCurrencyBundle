@@ -10,17 +10,20 @@ class ConverterTest extends BaseUnitTestCase
 {
     const CURRENCY_ENTITY = 'Lexik\Bundle\CurrencyBundle\Entity\Currency';
 
+    private $container;
     private $em;
 
     private $adapter;
 
     public function setUp()
     {
-        $this->em = $this->getMockSqliteEntityManager();
+        $this->container = $this->getMockContainer();
+        $this->em = $this->container->get('doctrine')->getEntityManager();
+
         $this->createSchema($this->em);
         $this->loadFixtures($this->em);
 
-        $factory = new AdapterFactory($this->em, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
+        $factory = new AdapterFactory($this->container, null, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
         $this->adapter = $factory->createDoctrineAdapter();
     }
 

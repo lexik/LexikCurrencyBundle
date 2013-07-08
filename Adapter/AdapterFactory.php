@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This class is used to create DoctrineCurrencyAdapter
@@ -32,8 +33,9 @@ class AdapterFactory
      *
      * @param EntityManager $em
      */
-    public function __construct(EntityManager $em, $defaultCurrency, $availableCurrencies, $currencyClass)
+    public function __construct(ContainerInterface $c, $entityManagerName = null, $defaultCurrency, $availableCurrencies, $currencyClass)
     {
+        $em = $c->get('doctrine')->getEntityManager($entityManagerName);
         $this->em = $em;
 
         $this->currencies = array();
