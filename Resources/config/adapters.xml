@@ -19,8 +19,7 @@
 
         <!-- Factory -->
         <service id="lexik_currency.adapter_factory" class="%lexik_currency.adapter_factory.class%">
-            <argument type="service" id="service_container" />
-            <argument>%lexik_currency.doctrine.orm.entity_manager%</argument>
+            <argument type="service" id="doctrine" />
             <argument>%lexik_currency.currencies.default%</argument>
             <argument>%lexik_currency.currencies.managed%</argument>
             <argument>%lexik_currency.currency_class%</argument>
@@ -35,6 +34,8 @@
                  factory-service="lexik_currency.adapter_factory"
                  factory-method="createDoctrineAdapter"
         >
+            <argument>%lexik_currency.doctrine_adapter.class%</argument>
+            <argument>%lexik_currency.doctrine.orm.entity_manager%</argument>
             <tag name="lexik_currency.adapter" alias="doctrine_currency_adapter" />
         </service>
 

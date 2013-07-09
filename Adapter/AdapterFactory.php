@@ -3,7 +3,7 @@
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * This class is used to create DoctrineCurrencyAdapter
@@ -16,7 +16,7 @@ class AdapterFactory
     /**
      * @var EntityManager
      */
-    private $em;
+    protected $doctrine;
 
     /**
      * @var array
@@ -33,10 +33,9 @@ class AdapterFactory
      *
      * @param EntityManager $em
      */
-    public function __construct(ContainerInterface $c, $entityManagerName = null, $defaultCurrency, $availableCurrencies, $currencyClass)
+    public function __construct(Registry $doctrine, $defaultCurrency, $availableCurrencies, $currencyClass)
     {
-        $em = $c->get('doctrine')->getEntityManager($entityManagerName);
-        $this->em = $em;
+        $this->doctrine = $doctrine;
 
         $this->currencies = array();
         $this->currencies['default'] = $defaultCurrency;
@@ -65,7 +64,7 @@ class AdapterFactory
      *
      * @return Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter
      */
-    public function createDoctrineAdapter($adapterClass = null)
+    public function createDoctrineAdapter($adapterClass = null, $entityManagerName = null)
     {
         if (null == $adapterClass) {
             $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter';
@@ -73,7 +72,9 @@ class AdapterFactory
 
         $adapter = $this->create($adapterClass);
 
-        $currencies = $this->em
+        $em = $this->doctrine->getManager($entityManagerName);
+
+        $currencies = $em
             ->getRepository($this->currencyClass)
             ->findAll();
 

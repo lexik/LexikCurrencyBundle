@@ -96,7 +96,7 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
         return $em;
     }
 
-    protected function getMockContainer()
+    protected  function getMockDoctrine()
     {
         $em = $this->getMockSqliteEntityManager();
 
@@ -105,15 +105,16 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $doctrine->expects($this->any())
-            ->method('getEntityManager')
+            ->method('getManager')
             ->will($this->returnValue($em));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->any())
-            ->method('get')
-            ->with($this->equalTo('doctrine'))
-            ->will($this->returnValue($doctrine));
+        return $doctrine;
+    }
 
-        return $container;
+    protected function getEntityManager()
+    {
+        $em = $this->doctrine->getManager();
+
+        return $em;
     }
 }
