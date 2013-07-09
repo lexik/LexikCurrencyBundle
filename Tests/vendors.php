@@ -18,6 +18,7 @@ $deps = array(
     array('doctrine-dbal',     'https://github.com/doctrine/dbal.git'),
     array('doctrine',          'https://github.com/doctrine/doctrine2.git'),
     array('doctrine-fixtures', 'https://github.com/doctrine/data-fixtures.git'),
+    array('doctrine-bundle',   'https://github.com/doctrine/DoctrineBundle.git'),
     array('twig',              'https://github.com/fabpot/Twig.git'),
 );
 
@@ -28,6 +29,7 @@ $revs = array(
         'doctrine-dbal'     => '2.3.2',
         'doctrine'          => '2.3.2',
         'doctrine-fixtures' => 'origin/master',
+        'doctrine-bundle'   => 'v1.2.0',
         'twig'              => 'v1.12.1',
     ),
     'v2.3' => array(
@@ -36,6 +38,7 @@ $revs = array(
         'doctrine-dbal'     => '2.3.4',
         'doctrine'          => '2.3.4',
         'doctrine-fixtures' => 'origin/master',
+        'doctrine-bundle'   => 'v1.2.0',
         'twig'              => 'v1.13.1',
     ),
 );
@@ -48,7 +51,11 @@ foreach ($deps as $index => $dep) {
     list($name, $url) = $dep;
     $rev = isset($revs[$_SERVER['SYMFONY_VERSION']][$name]) ? $revs[$_SERVER['SYMFONY_VERSION']][$name] : 'origin/master';
 
-    $installDir = (substr($name, -6) == 'Bundle') ? $vendorDir.'/bundles/Symfony/Bundle/'.$name : $vendorDir.'/'.$name;
+    if ($name == 'doctrine-bundle') {
+        $installDir = $vendorDir.'/'.$name.'/Doctrine/Bundle/DoctrineBundle';
+    } else {
+        $installDir = (substr($name, -6) == 'Bundle') ? $vendorDir.'/bundles/Symfony/Bundle/'.$name : $vendorDir.'/'.$name;
+    }
     if (!is_dir($installDir)) {
         echo sprintf("> Installing %s\n", $name);
 
