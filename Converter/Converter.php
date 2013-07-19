@@ -16,17 +16,17 @@ class Converter
     /**
      * @var AbstractCurrencyAdapter
      */
-    private $adapter;
+    protected $adapter;
 
     /**
      * @var int
      */
-    private $precision;
+    protected $precision;
 
     /**
      * @var string
      */
-    private $roundMode;
+    protected $roundMode;
 
     /**
      * Construct.

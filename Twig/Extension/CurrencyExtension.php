@@ -17,12 +17,12 @@ class CurrencyExtension extends \Twig_Extension
     /**
      * @var Converter
      */
-    private $converter;
+    protected $converter;
 
     /**
      * @var TranslatorInterface
      */
-    private $translator;
+    protected $translator;
 
     /**
      * Construct.
