@@ -13,7 +13,7 @@ Add the bunde to your `composer.json` file:
 ```javascript
 require: {
     // ...
-    "lexik/currency-bundle": "v1.1.*"
+    "lexik/currency-bundle": "1.1.*"
     // ...
 }
 ```
@@ -94,6 +94,14 @@ $convertedAmount = $container->get('lexik_currency.converter')->convert($amount,
 
 // here the amount won't be rounded and we specify that $amount currency is 'USD'
 $convertedAmount = $container->get('lexik_currency.converter')->convert($amount, $targetCurrency, false, 'USD');
+```
+
+##### Retrieve managed configurations
+
+In the controller, you can use the following line to retrieve an array of all managed currencies:
+
+```php
+$managedCurrencies = $this->container->getParameter('lexik_currency.currencies.managed');
 ```
 
 ##### Twig filters
