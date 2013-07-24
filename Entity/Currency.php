@@ -15,8 +15,8 @@ class Currency
     protected $id;
 
     /**
-     * @Assert\MinLength(3)
-     * @Assert\MaxLength(3)
+     * @Assert\Length(min=3)
+     * @Assert\Length(max=3)
      * @Assert\NotBlank()
      * @Assert\Type(type="string")
      *
