@@ -2,9 +2,10 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Twig\Extension;
 
+use Symfony\Component\DependencyInjection\Container;
 use Lexik\Bundle\CurrencyBundle\Converter\Converter;
-
 use Symfony\Component\Translation\TranslatorInterface;
+
 
 /**
  * Twig extension to format and convert currencies from templates.
@@ -15,25 +16,25 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CurrencyExtension extends \Twig_Extension
 {
     /**
-     * @var Converter
-     */
-    protected $converter;
-
-    /**
      * @var TranslatorInterface
      */
     protected $translator;
 
     /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * Construct.
      *
      * @param TranslatorInterface $translator
-     * @param Converter $converter
+     * @param Container           $container  We need the entire container to lazy load the Converter
      */
-    public function __construct(TranslatorInterface $translator, Converter $converter)
+    public function __construct(TranslatorInterface $translator, Container $container)
     {
         $this->translator = $translator;
-        $this->converter = $converter;
+        $this->container = $container;
     }
 
     /**
@@ -49,6 +50,16 @@ class CurrencyExtension extends \Twig_Extension
     }
 
     /**
+     * Return Currency Converter
+     *
+     * @return Converter
+     */
+    public function getConverter()
+    {
+        return $this->container->get('lexik_currency.converter');
+    }
+
+    /**
      * Convert the given value.
      *
      * @param float   $value
@@ -59,7 +70,7 @@ class CurrencyExtension extends \Twig_Extension
      */
     public function convert($value, $targetCurrency, $round = true, $valueCurrency = null)
     {
-        return $this->converter->convert($value, $targetCurrency, $round, $valueCurrency);
+        return $this->getConverter()->convert($value, $targetCurrency, $round, $valueCurrency);
     }
 
     /**
@@ -74,7 +85,7 @@ class CurrencyExtension extends \Twig_Extension
     public function format($value, $valueCurrency = null, $decimal = true, $symbol = true)
     {
         if (null === $valueCurrency) {
-            $valueCurrency = $this->converter->getDefaultCurrency();
+            $valueCurrency = $this->getConverter()->getDefaultCurrency();
         }
 
         $formatter = new \NumberFormatter($this->translator->getLocale(), $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
