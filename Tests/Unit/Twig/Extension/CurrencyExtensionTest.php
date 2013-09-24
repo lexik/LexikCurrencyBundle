@@ -6,6 +6,7 @@ use Lexik\Bundle\CurrencyBundle\Converter\Converter;
 use Lexik\Bundle\CurrencyBundle\Adapter\AdapterFactory;
 use Lexik\Bundle\CurrencyBundle\Twig\Extension\CurrencyExtension;
 use Lexik\Bundle\CurrencyBundle\Tests\Unit\BaseUnitTestCase;
+use Symfony\Component\DependencyInjection\Container;
 
 class CurrencyExtensionTest extends BaseUnitTestCase
 {
@@ -13,7 +14,7 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     protected $doctrine;
 
-    private $converter;
+    private $container;
 
     private $translator;
 
@@ -27,7 +28,10 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
         $factory = new AdapterFactory($this->doctrine, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
 
-        $this->converter = new Converter($factory->createDoctrineAdapter());
+        $converter = new Converter($factory->createDoctrineAdapter());
+
+        $this->container = new Container();
+        $this->container->set('lexik_currency.converter', $converter);
 
         $this->translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
         $this->translator->expects($this->any())
@@ -37,7 +41,7 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     public function testConvert()
     {
-        $extension = new CurrencyExtension($this->translator, $this->converter);
+        $extension = new CurrencyExtension($this->translator, $this->container);
 
         $this->assertEquals(11.27, $extension->convert(8.666, 'USD'));
         $this->assertEquals(8.67, $extension->convert(8.666, 'EUR'));
@@ -45,7 +49,7 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     public function testFormat()
     {
-        $extension = new CurrencyExtension($this->translator, $this->converter);
+        $extension = new CurrencyExtension($this->translator, $this->container);
 
         $this->assertEquals('8,67 €', $extension->format(8.666));
         $this->assertEquals('8,67 €', $extension->format(8.666, 'EUR'));
@@ -58,7 +62,7 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     public function testConvertAndFormat()
     {
-        $extension = new CurrencyExtension($this->translator, $this->converter);
+        $extension = new CurrencyExtension($this->translator, $this->container);
 
         $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD'));
         $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD', false));

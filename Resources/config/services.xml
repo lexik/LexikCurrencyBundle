@@ -12,7 +12,7 @@
     <services>
         <service id="lexik_currency.currency_extension" class="%lexik_currency.currency_extension.class%" public="false">
             <argument type="service" id="translator" />
-            <argument type="service" id="lexik_currency.converter" />
+            <argument type="service" id="service_container" />
             <tag name="twig.extension" />
         </service>
         
