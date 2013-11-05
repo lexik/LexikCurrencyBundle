@@ -66,6 +66,10 @@ class Converter
         if (null == $valueCurrency) {
             $valueCurrency = $this->getDefaultCurrency();
         }
+        
+        if (!isset($this->adapter[$valueCurrency])) {
+            throw new CurrencyNotFoundException($valueCurrency);
+        }
 
         if ($targetCurrency != $valueCurrency) {
             if ($this->getDefaultCurrency() == $valueCurrency) {
