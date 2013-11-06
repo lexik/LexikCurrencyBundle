@@ -64,6 +64,15 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml')
                 ->end()
+
+                ->scalarNode('oer_url')
+                    ->cannotBeEmpty()
+                    ->defaultValue('http://openexchangerates.org/api/latest.json')
+                ->end()
+
+                ->scalarNode('oer_app_id')
+                    ->defaultValue(null)
+                ->end()
             ->end()
         ;
 

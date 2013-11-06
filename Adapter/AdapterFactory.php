@@ -98,4 +98,18 @@ class AdapterFactory
 
         return $this->create($adapterClass);
     }
+
+    /**
+     * Create an OerCurrencyAdapter.
+     *
+     * @return Lexik\Bundle\CurrencyBundle\Adapter\OerCurrencyAdapter
+     */
+    public function createOerAdapter($adapterClass = null)
+    {
+        if (null == $adapterClass) {
+            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\OerCurrencyAdapter';
+        }
+
+        return $this->create($adapterClass);
+    }
 }
