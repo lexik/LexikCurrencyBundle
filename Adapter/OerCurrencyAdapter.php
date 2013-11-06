@@ -6,6 +6,9 @@ use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
+ * Oer adapter, http://openexchangerates.org
+ * This provider requires registration in order to get api access
+ *
  * @author Noel García <noel@coolmobile.es>
  */
 class OerCurrencyAdapter extends AbstractCurrencyAdapter
@@ -21,7 +24,7 @@ class OerCurrencyAdapter extends AbstractCurrencyAdapter
     private $appId;
 
     /**
-     * Set the ECB url.
+     * Set the OER url.
      *
      * @param string $url
      */
@@ -30,6 +33,11 @@ class OerCurrencyAdapter extends AbstractCurrencyAdapter
         $this->url = $url;
     }
 
+	/**
+	 * Sets the app-id
+	 * 
+	 * @param string $appId
+	 */
 	public function setOerAppId($appId)
 	{
 		$this->appId = $appId;
