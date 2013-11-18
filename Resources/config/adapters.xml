@@ -9,6 +9,7 @@
         <parameter key="lexik_currency.adapter_factory.class">Lexik\Bundle\CurrencyBundle\Adapter\AdapterFactory</parameter>
         <parameter key="lexik_currency.abstract_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter</parameter>
         <parameter key="lexik_currency.ecb_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter</parameter>
+        <parameter key="lexik_currency.oer_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\OerCurrencyAdapter</parameter>
         <parameter key="lexik_currency.doctrine_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter</parameter>
         <parameter key="lexik_currency.doctrine.orm.entity_manager">default</parameter>
     </parameters>
@@ -49,6 +50,21 @@
                 <argument>%lexik_currency.ecb_url%</argument>
             </call>
             <tag name="lexik_currency.adapter" alias="ecb_currency_adapter" />
+        </service>
+
+        <service id="lexik_currency.oer_adapter"
+                 class="%lexik_currency.oer_adapter.class%"
+                 parent="lexik_currency.abstract_adapter"
+                 factory-service="lexik_currency.adapter_factory"
+                 factory-method="createOerAdapter"
+        >
+            <call method="setOerUrl">
+                <argument>%lexik_currency.oer_url%</argument>
+            </call>
+            <call method="setOerAppId">
+                <argument>%lexik_currency.oer_app_id%</argument>
+            </call>
+            <tag name="lexik_currency.adapter" alias="oer_currency_adapter" />
         </service>
     </services>
 

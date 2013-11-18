@@ -28,6 +28,8 @@ class LexikCurrencyExtension extends Extension
         $container->setParameter('lexik_currency.currency_class', $config['currency_class']);
         $container->setParameter('lexik_currency.default_adapter', $config['default_adapter']);
         $container->setParameter('lexik_currency.ecb_url', $config['ecb_url']);
+        $container->setParameter('lexik_currency.oer_url', $config['oer_url']);
+        $container->setParameter('lexik_currency.oer_app_id', $config['oer_app_id']);
         $container->setParameter('lexik_currency.decimal_part.precision', $config['decimal_part']['precision']);
         $container->setParameter('lexik_currency.decimal_part.round_mode', $config['decimal_part']['round_mode']);
 
