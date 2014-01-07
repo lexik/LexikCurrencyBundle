@@ -47,9 +47,11 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
             $data = $xml->xpath('//gesmes:Envelope/*[3]/*');
 
             foreach ($data[0]->children() as $child) {
-                if (in_array($child->attributes()->currency, $this->managedCurrencies)) {
+                $code = (string) $child->attributes()->currency;
+
+                if (in_array($code, $this->managedCurrencies)) {
                     $currency = new $this->currencyClass;
-                    $currency->setCode((string) $child->attributes()->currency);
+                    $currency->setCode($code);
                     $currency->setRate((string) $child->attributes()->rate);
 
                     $this[$currency->getCode()] = $currency;
