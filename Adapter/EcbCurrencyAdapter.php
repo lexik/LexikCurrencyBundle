@@ -44,16 +44,13 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
         $xml = @simplexml_load_file($this->ecbUrl);
 
         if ($xml instanceof \SimpleXMLElement) {
-            $crawler = new Crawler($xml->asXML());
-            $datas = $crawler
-                ->filter('cube > cube > cube')
-                ->extract(array('currency', 'rate'));
+            $data = $xml->xpath('//gesmes:Envelope/*[3]/*');
 
-            foreach ($datas as $data) {
-                if (in_array($data[0], $this->managedCurrencies)) {
+            foreach ($data[0]->children() as $child) {
+                if (in_array($child->attributes()->currency, $this->managedCurrencies)) {
                     $currency = new $this->currencyClass;
-                    $currency->setCode($data[0]);
-                    $currency->setRate($data[1]);
+                    $currency->setCode((string) $child->attributes()->currency);
+                    $currency->setRate((string) $child->attributes()->rate);
 
                     $this[$currency->getCode()] = $currency;
                 }
