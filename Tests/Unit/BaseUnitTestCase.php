@@ -5,7 +5,6 @@ namespace Lexik\Bundle\CurrencyBundle\Tests\Unit;
 use Lexik\Bundle\CurrencyBundle\Tests\Fixtures\CurrencyData;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -81,10 +80,13 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Doctrine\ORM\Mapping\ClassMetadataFactory'));
         $config->expects($this->any())
             ->method('getDefaultRepositoryClassName')
-            ->will($this->returnValue('Doctrine\\ORM\\EntityRepository'));
+            ->will($this->returnValue('Doctrine\ORM\EntityRepository'));
+        $config->expects($this->any())
+            ->method('getRepositoryFactory')
+            ->will($this->returnValue(new \Doctrine\ORM\Repository\DefaultRepositoryFactory()));
         $config->expects($this->any())
             ->method('getQuoteStrategy')
-            ->will($this->returnValue(new DefaultQuoteStrategy()));
+            ->will($this->returnValue(new \Doctrine\ORM\Mapping\DefaultQuoteStrategy()));
 
         $conn = array(
             'driver' => 'pdo_sqlite',
