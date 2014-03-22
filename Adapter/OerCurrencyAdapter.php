@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
 use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Oer adapter, http://openexchangerates.org
@@ -35,7 +34,7 @@ class OerCurrencyAdapter extends AbstractCurrencyAdapter
 
 	/**
 	 * Sets the app-id
-	 * 
+	 *
 	 * @param string $appId
 	 */
 	public function setOerAppId($appId)

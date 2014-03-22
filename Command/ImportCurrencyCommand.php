@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Command;
 
-use Lexik\Bundle\CurrencyBundle\Entity\Currency;
-
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

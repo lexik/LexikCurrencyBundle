@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
-use Symfony\Component\DomCrawler\Crawler;
-
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
  * @author Yoann Aparici <y.aparici@lexik.fr>
@@ -40,7 +38,6 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
         $this[$euro->getCode()] = $euro;
 
         // Get other currencies
-        // @todo timeout + try catch
         $xml = @simplexml_load_file($this->ecbUrl);
 
         if ($xml instanceof \SimpleXMLElement) {

@@ -3,8 +3,6 @@
 namespace Lexik\Bundle\CurrencyBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\Container;
-use Lexik\Bundle\CurrencyBundle\Converter\Converter;
-use Symfony\Component\Translation\TranslatorInterface;
 
 
 /**
@@ -16,11 +14,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CurrencyExtension extends \Twig_Extension
 {
     /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
      * @var Container
      */
     protected $container;
@@ -28,12 +21,10 @@ class CurrencyExtension extends \Twig_Extension
     /**
      * Construct.
      *
-     * @param TranslatorInterface $translator
-     * @param Container           $container  We need the entire container to lazy load the Converter
+     * @param Container $container  We need the entire container to lazy load the Converter
      */
-    public function __construct(TranslatorInterface $translator, Container $container)
+    public function __construct(Container $container)
     {
-        $this->translator = $translator;
         $this->container = $container;
     }
 
@@ -52,7 +43,7 @@ class CurrencyExtension extends \Twig_Extension
     /**
      * Return Currency Converter
      *
-     * @return Converter
+     * @return \Lexik\Bundle\CurrencyBundle\Converter\Converter
      */
     public function getConverter()
     {
@@ -88,7 +79,9 @@ class CurrencyExtension extends \Twig_Extension
             $valueCurrency = $this->getConverter()->getDefaultCurrency();
         }
 
-        $formatter = new \NumberFormatter($this->translator->getLocale(), $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
+        $locale = $this->container->get('translator')->getLocale();
+
+        $formatter = new \NumberFormatter($locale, $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
         $value = $formatter->formatCurrency($value, $valueCurrency);
 
         if (!$decimal) {

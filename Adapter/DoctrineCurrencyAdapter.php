@@ -2,8 +2,6 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
-use Doctrine\ORM\EntityManager;
-
 /**
  * @author Yoann Aparici <y.aparici@lexik.fr>
  * @author Cédric Girard <c.girard@lexik.fr>
@@ -15,7 +13,7 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
      */
     public function attachAll()
     {
-
+        // nothing here
     }
 
     /**

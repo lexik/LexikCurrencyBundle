@@ -28,20 +28,21 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
         $factory = new AdapterFactory($this->doctrine, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
 
+        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
+        $translator->expects($this->any())
+            ->method('getLocale')
+            ->will($this->returnValue('fr'));
+
         $converter = new Converter($factory->createDoctrineAdapter());
 
         $this->container = new Container();
         $this->container->set('lexik_currency.converter', $converter);
-
-        $this->translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
-        $this->translator->expects($this->any())
-            ->method('getLocale')
-            ->will($this->returnValue('fr'));
+        $this->container->set('translator', $translator);
     }
 
     public function testConvert()
     {
-        $extension = new CurrencyExtension($this->translator, $this->container);
+        $extension = new CurrencyExtension($this->container);
 
         $this->assertEquals(11.27, $extension->convert(8.666, 'USD'));
         $this->assertEquals(8.67, $extension->convert(8.666, 'EUR'));
@@ -49,7 +50,7 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     public function testFormat()
     {
-        $extension = new CurrencyExtension($this->translator, $this->container);
+        $extension = new CurrencyExtension($this->container);
 
         $this->assertEquals('8,67 €', $extension->format(8.666));
         $this->assertEquals('8,67 €', $extension->format(8.666, 'EUR'));
@@ -62,7 +63,7 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     public function testConvertAndFormat()
     {
-        $extension = new CurrencyExtension($this->translator, $this->container);
+        $extension = new CurrencyExtension($this->container);
 
         $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD'));
         $this->assertEquals('11,27 $', $extension->convertAndFormat(8.666, 'USD', false));
