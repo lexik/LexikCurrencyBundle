@@ -2,7 +2,7 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Tests\Unit\Twig\Extension;
 
-use Lexik\Bundle\CurrencyBundle\Converter\Converter;
+use Lexik\Bundle\CurrencyBundle\Currency\Converter;
 use Lexik\Bundle\CurrencyBundle\Adapter\AdapterFactory;
 use Lexik\Bundle\CurrencyBundle\Twig\Extension\CurrencyExtension;
 use Lexik\Bundle\CurrencyBundle\Tests\Unit\BaseUnitTestCase;

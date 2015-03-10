@@ -2,8 +2,7 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Twig\Extension;
 
-use Symfony\Component\DependencyInjection\Container;
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Twig extension to format and convert currencies from templates.
@@ -14,16 +13,16 @@ use Symfony\Component\DependencyInjection\Container;
 class CurrencyExtension extends \Twig_Extension
 {
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
      * Construct.
      *
-     * @param Container $container  We need the entire container to lazy load the Converter
+     * @param ContainerInterface $container  We need the entire container to lazy load the Converter
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -41,13 +40,19 @@ class CurrencyExtension extends \Twig_Extension
     }
 
     /**
-     * Return Currency Converter
-     *
-     * @return \Lexik\Bundle\CurrencyBundle\Converter\Converter
+     * @return \Lexik\Bundle\CurrencyBundle\Currency\ConverterInterface
      */
     public function getConverter()
     {
         return $this->container->get('lexik_currency.converter');
+    }
+
+    /**
+     * @return \Lexik\Bundle\CurrencyBundle\Currency\FormatterInterface
+     */
+    public function getFormatter()
+    {
+        return $this->container->get('lexik_currency.formatter');
     }
 
     /**
@@ -79,18 +84,7 @@ class CurrencyExtension extends \Twig_Extension
             $valueCurrency = $this->getConverter()->getDefaultCurrency();
         }
 
-        $locale = $this->container->get('translator')->getLocale();
-
-        $formatter = new \NumberFormatter($locale, $symbol ? \NumberFormatter::CURRENCY : \NumberFormatter::PATTERN_DECIMAL);
-        $value = $formatter->formatCurrency($value, $valueCurrency);
-
-        if (!$decimal) {
-            $value = preg_replace('/[.,]00((?=\D)|$)/', '', $value);
-        }
-
-        $value = str_replace(array('EU', 'UK', 'US'), '', $value);
-
-        return $value;
+        return $this->getFormatter()->format($value, $valueCurrency, $decimal, $symbol);
     }
 
     /**
