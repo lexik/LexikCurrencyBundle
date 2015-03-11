@@ -27,7 +27,7 @@
             <argument>%locale%</argument>
         </service>
 
-        <service id="lexik_currency.subscriber.locale" class="%lexik_currency.subscriber.locale.class%" public="false">
+        <service id="lexik_currency.subscriber.locale" class="%lexik_currency.subscriber.locale.class%">
             <argument type="service" id="lexik_currency.formatter" />
             <tag name="kernel.event_subscriber" />
         </service>
