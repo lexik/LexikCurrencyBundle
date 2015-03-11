@@ -4,6 +4,7 @@ namespace Lexik\Bundle\CurrencyBundle\Tests\Unit\Twig\Extension;
 
 use Lexik\Bundle\CurrencyBundle\Currency\Converter;
 use Lexik\Bundle\CurrencyBundle\Adapter\AdapterFactory;
+use Lexik\Bundle\CurrencyBundle\Currency\Formatter;
 use Lexik\Bundle\CurrencyBundle\Twig\Extension\CurrencyExtension;
 use Lexik\Bundle\CurrencyBundle\Tests\Unit\BaseUnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -16,8 +17,6 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
     private $container;
 
-    private $translator;
-
     public function setUp()
     {
         $this->doctrine = $this->getMockDoctrine();
@@ -28,16 +27,13 @@ class CurrencyExtensionTest extends BaseUnitTestCase
 
         $factory = new AdapterFactory($this->doctrine, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
 
-        $translator = $this->getMock('Symfony\Component\Translation\TranslatorInterface');
-        $translator->expects($this->any())
-            ->method('getLocale')
-            ->will($this->returnValue('fr'));
-
         $converter = new Converter($factory->createDoctrineAdapter());
+
+        $formatter = new Formatter('fr');
 
         $this->container = new Container();
         $this->container->set('lexik_currency.converter', $converter);
-        $this->container->set('translator', $translator);
+        $this->container->set('lexik_currency.formatter', $formatter);
     }
 
     public function testConvert()
