@@ -1,6 +1,6 @@
 <?php
 
-namespace Lexik\Bundle\CurrencyBundle\Converter;
+namespace Lexik\Bundle\CurrencyBundle\Currency;
 
 use Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter;
 use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
@@ -11,7 +11,7 @@ use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
  * @author Cédric Girard <c.girard@lexik.fr>
  * @author Yoann Aparici <y.aparici@lexik.fr>
  */
-class Converter
+class Converter implements ConverterInterface
 {
     /**
      * @var AbstractCurrencyAdapter
@@ -19,7 +19,7 @@ class Converter
     protected $adapter;
 
     /**
-     * @var int
+     * @var integer
      */
     protected $precision;
 
@@ -32,8 +32,9 @@ class Converter
      * Construct.
      *
      * @param AbstractCurrencyAdapter $adapter
-     * @param int                     $precision
+     * @param integer                 $precision
      * @param string                  $roundMode
+     * @throws \InvalidArgumentException
      */
     public function __construct(AbstractCurrencyAdapter $adapter, $precision = 2, $roundMode = 'up')
     {
@@ -49,13 +50,7 @@ class Converter
     }
 
     /**
-     * Convert from default currency to another
-     *
-     * @param float   $value
-     * @param string  $targetCurrency
-     * @param boolean $round
-     * @param string  $valueCurrency
-     * @return float
+     * {@inheritDoc}
      */
     public function convert($value, $targetCurrency, $round = true, $valueCurrency = null)
     {
@@ -66,7 +61,7 @@ class Converter
         if (null == $valueCurrency) {
             $valueCurrency = $this->getDefaultCurrency();
         }
-        
+
         if (!isset($this->adapter[$valueCurrency])) {
             throw new CurrencyNotFoundException($valueCurrency);
         }
@@ -88,9 +83,7 @@ class Converter
     }
 
     /**
-     * Get default currency
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getDefaultCurrency()
     {
