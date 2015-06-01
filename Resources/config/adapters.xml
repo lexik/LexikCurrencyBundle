@@ -29,35 +29,23 @@
         <!-- Adapters -->
         <service id="lexik_currency.abstract_adapter" class="%lexik_currency.abstract_adapter.class%" abstract="true" />
 
-        <service id="lexik_currency.doctrine_adapter" 
-                 class="%lexik_currency.doctrine_adapter.class%"  
-                 parent="lexik_currency.abstract_adapter"
-                 factory-service="lexik_currency.adapter_factory"
-                 factory-method="createDoctrineAdapter"
-        >
+        <service id="lexik_currency.doctrine_adapter" class="%lexik_currency.doctrine_adapter.class%" parent="lexik_currency.abstract_adapter">
+            <factory service="lexik_currency.adapter_factory" method="createDoctrineAdapter" />
             <argument>%lexik_currency.doctrine_adapter.class%</argument>
             <argument>%lexik_currency.doctrine.orm.entity_manager%</argument>
             <tag name="lexik_currency.adapter" alias="doctrine_currency_adapter" />
         </service>
 
-        <service id="lexik_currency.ecb_adapter" 
-                 class="%lexik_currency.ecb_adapter.class%" 
-                 parent="lexik_currency.abstract_adapter"
-                 factory-service="lexik_currency.adapter_factory"
-                 factory-method="createEcbAdapter"
-        >
+        <service id="lexik_currency.ecb_adapter" class="%lexik_currency.ecb_adapter.class%" parent="lexik_currency.abstract_adapter">
+            <factory service="lexik_currency.adapter_factory" method="createEcbAdapter" />
             <call method="setEcbUrl">
                 <argument>%lexik_currency.ecb_url%</argument>
             </call>
             <tag name="lexik_currency.adapter" alias="ecb_currency_adapter" />
         </service>
 
-        <service id="lexik_currency.oer_adapter"
-                 class="%lexik_currency.oer_adapter.class%"
-                 parent="lexik_currency.abstract_adapter"
-                 factory-service="lexik_currency.adapter_factory"
-                 factory-method="createOerAdapter"
-        >
+        <service id="lexik_currency.oer_adapter" class="%lexik_currency.oer_adapter.class%" parent="lexik_currency.abstract_adapter">
+            <factory service="lexik_currency.adapter_factory" method="createOerAdapter" />
             <call method="setOerUrl">
                 <argument>%lexik_currency.oer_url%</argument>
             </call>
