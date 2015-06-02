@@ -1,7 +1,7 @@
 {
     "name": "lexik/currency-bundle",
     "type": "symfony-bundle",
-    "description": "This Symfony2 bundle provide a service and a Twig extension to convert and display currencies.",
+    "description": "This Symfony2 bundle provides a service and a Twig extension to convert and display currencies.",
     "keywords": ["Symfony2", "bundle", "currency"],
     "homepage": "https://github.com/lexik/LexikCurrencyBundle",
     "license": "MIT",
