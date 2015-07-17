@@ -69,18 +69,10 @@ class AdapterFactory
         if (null == $adapterClass) {
             $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter';
         }
-
         $adapter = $this->create($adapterClass);
 
         $em = $this->doctrine->getManager($entityManagerName);
-
-        $currencies = $em
-            ->getRepository($this->currencyClass)
-            ->findAll();
-
-        foreach ($currencies as $currency) {
-            $adapter[$currency->getCode()] = $currency;
-        }
+        $adapter->setManager($em);
 
         return $adapter;
     }

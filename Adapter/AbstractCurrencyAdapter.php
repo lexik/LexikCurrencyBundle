@@ -20,6 +20,11 @@ abstract class AbstractCurrencyAdapter extends \ArrayIterator
     protected $managedCurrencies = array();
 
     /**
+     * @var string
+     */
+    protected $currencyClass;
+
+    /**
      * Set default currency
      *
      * @param string $defaultCurrency
@@ -75,7 +80,7 @@ abstract class AbstractCurrencyAdapter extends \ArrayIterator
      * @param mixed $index
      * @param Currency $newval
      */
-    public function offsetSet ($index, $newval)
+    public function offsetSet($index, $newval)
     {
         if (!$newval instanceof $this->currencyClass) {
             throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', get_class($newval)));
