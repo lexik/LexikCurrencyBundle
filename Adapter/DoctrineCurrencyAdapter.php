@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
 use Doctrine\ORM\EntityManager;
-use Exception;
 
 /**
  * @author Yoann Aparici <y.aparici@lexik.fr>
@@ -47,14 +46,21 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
         $this->manager = $manager;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function offsetExists($index)
     {
         if (!$this->isInitialized()) {
             $this->initialize();
         }
+
         return parent::offsetExists($index);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function offsetGet($index)
     {
         if (!$this->isInitialized()) {
@@ -72,10 +78,13 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
         return $this->initialized;
     }
 
+    /**
+     * @throws Exception
+     */
     private function initialize()
     {
         if (!isset($this->manager)) {
-            throw new Exception('No ObjectManager set');
+            throw new \RuntimeException('No ObjectManager set on DoctrineCurrencyAdapter.');
         }
 
         $currencies = $this->manager

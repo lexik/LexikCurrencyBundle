@@ -40,6 +40,9 @@ class AdapterFactoryTest extends BaseUnitTestCase
         $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter', $adapter);
         $this->assertEquals('USD', $adapter->getDefaultCurrency());
         $this->assertEquals(array('EUR'), $adapter->getManagedCurrencies());
+        $this->assertEquals(0, count($adapter));
+
+        $adapter['USD']; // force initialization
         $this->assertEquals(2, count($adapter));
     }
 }
