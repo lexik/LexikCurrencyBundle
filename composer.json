@@ -17,10 +17,9 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": "~2.6"
+        "symfony/framework-bundle": "~2.7"
     },
     "autoload": {
-        "psr-0": { "Lexik\\Bundle\\CurrencyBundle": "" }
-    },
-    "target-dir": "Lexik/Bundle/CurrencyBundle"
+        "psr-4": { "Lexik\\Bundle\\CurrencyBundle\\": "" }
+    }
 }
