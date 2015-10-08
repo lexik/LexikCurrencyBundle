@@ -33,9 +33,9 @@ class CurrencyExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'currency_convert'        => new \Twig_Filter_Method($this, 'convert'),
-            'currency_format'         => new \Twig_Filter_Method($this, 'format'),
-            'currency_convert_format' => new \Twig_Filter_Method($this, 'convertAndFormat'),
+            new \Twig_SimpleFilter('currency_convert', array($this, 'convert')),
+            new \Twig_SimpleFilter('currency_format', array($this, 'format')),
+            new \Twig_SimpleFilter('currency_convert_format', array($this, 'convertAndFormat')),
         );
     }
 
