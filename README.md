@@ -77,7 +77,7 @@ To initialize the currencies rate in the database run the following command:
 ```
 
 Example by using the ECB adapter, to get rates from the European Central Bank.
-In the commanda line `ecb` is the value returned by the `getIdentifier()` method of the adapter class.
+In the command line `ecb` is the value returned by the `getIdentifier()` method of the adapter class.
 
 ```
 ./app/console lexik:currency:import ecb
