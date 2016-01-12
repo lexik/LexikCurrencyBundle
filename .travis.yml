@@ -25,6 +25,7 @@ env:
 before_install:
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require doctrine/doctrine-bundle:~1.5 --no-update
+    - composer require doctrine/orm:~2.4 --no-update
     - composer require doctrine/data-fixtures:~1.0 --no-update
     - composer require twig/twig:~1.18 --no-update
 
