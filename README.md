@@ -147,7 +147,7 @@ Here an example
 
 namespace MyProject\With\Some\Rainbows;
 
-use Lexik\Bundle\CurrencyBundle\Adapte\AbstractCurrencyAdapter;
+use Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter;
 
 class RainbowCurrencyAdapter extends AbstractCurrencyAdapter
 {
