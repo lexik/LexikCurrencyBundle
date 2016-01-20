@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
 {
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
     private $manager;
 
@@ -79,7 +79,7 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function initialize()
     {
@@ -94,5 +94,7 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
         foreach ($currencies as $currency) {
             $this[$currency->getCode()] = $currency;
         }
+
+        $this->initialized = true;
     }
 }
