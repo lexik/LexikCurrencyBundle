@@ -73,6 +73,12 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('oer_app_id')
                     ->defaultValue(null)
                 ->end()
+
+                ->scalarNode('yahoo_url')
+                    ->cannotBeEmpty()
+                    ->defaultValue('https://query.yahooapis.com/v1/public/yql')
+                ->end()
+
             ->end()
         ;
 

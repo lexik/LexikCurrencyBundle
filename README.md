@@ -56,7 +56,7 @@ lexik_currency:
 ```
 
 Additonal options (default values are shown here):
-       
+
 ```yaml
 # app/config/config.yml
 lexik_currency:
@@ -137,7 +137,7 @@ You can also pass more arguments, to display or not decimal and the currency sym
 If you need to load conversions rates from another source you will have to create a CurrencyAdatpter and set it as the default adapter.
 
 To create your custom adapter you will have to extend `Lexik\Bundle\CurrencyBundle\Adapte\AbstractCurrencyAdapter` which define 2 abstract methods:
-* getIdentifier(): returns the identifier of the adapter. 
+* getIdentifier(): returns the identifier of the adapter.
 * attachAll(): loads the currencies with their rate (this method is call from the import command to get all currencies to save in the database).
 
 Here an example
@@ -147,7 +147,7 @@ Here an example
 
 namespace MyProject\With\Some\Rainbows;
 
-use Lexik\Bundle\CurrencyBundle\Adapte\AbstractCurrencyAdapter;
+use Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter;
 
 class RainbowCurrencyAdapter extends AbstractCurrencyAdapter
 {
@@ -172,7 +172,7 @@ class RainbowCurrencyAdapter extends AbstractCurrencyAdapter
             if (in_array($code, $this->managedCurrencies)) { // you can check if the currency is in the managed currencies
                 $currency = new $this->currencyClass;
                 $currency->setCode($code);
-                $currency->setRate($rate]);
+                $currency->setRate($rate);
 
                 $this[$currency->getCode()] = $currency;
             }
@@ -186,7 +186,7 @@ class RainbowCurrencyAdapter extends AbstractCurrencyAdapter
         // convert rates according to the default one.
         $this->convertAll($defaultRate);
     }
-    
+
     /**
      * {@inheritdoc}
      */
