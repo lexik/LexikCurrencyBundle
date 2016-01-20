@@ -40,12 +40,5 @@ class LexikCurrencyExtension extends Extension
         }
 
         $container->setParameter('lexik_currency.currencies.managed', $config['currencies']['managed']);
-
-        // set default adapter alias
-        foreach ($container->findTaggedServiceIds('lexik_currency.adapter') as $id => $attributes) {
-            if ($config['default_adapter'] == $id || $config['default_adapter'] == $attributes[0]['alias']) {
-                $container->setAlias('lexik_currency.default_adapter', $id);
-            }
-        }
     }
 }
