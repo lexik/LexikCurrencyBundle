@@ -201,6 +201,15 @@ Then define the adapter as a service, don't forget the `lexik_currency.adapter` 
 
 ```xml
 <service id="my_project.rainbow_currency_adapter" class="MyProject\With\Some\Rainbows\RainbowCurrencyAdapter">
+    <call method="setDefaultCurrency">
+        <argument>%lexik_currency.currencies.default%</argument>
+    </call>
+    <call method="setManagedCurrencies">
+        <argument>%lexik_currency.currencies.managed%</argument>
+    </call>
+    <call method="setCurrencyClass">
+        <argument>%lexik_currency.currency_class%</argument>
+    </call>
     <tag name="lexik_currency.adapter" alias="rainbow_currency_adapter" />
 </service>
 ```
