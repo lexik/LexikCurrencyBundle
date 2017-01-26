@@ -1,7 +1,7 @@
 Overview
 ========
 
-This Symfony2 bundle provide a service and a twig extension to convert and display currencies.
+This Symfony2 bundle provides a service and a twig extension to convert and display currencies.
 
 [![Build Status](https://secure.travis-ci.org/lexik/LexikCurrencyBundle.png?branch=master)](http://travis-ci.org/lexik/LexikCurrencyBundle)
 [![Latest Stable Version](https://poser.pugx.org/lexik/currency-bundle/v/stable)](https://packagist.org/packages/lexik/currency-bundle)
