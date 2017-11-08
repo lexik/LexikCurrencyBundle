@@ -74,11 +74,6 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(null)
                 ->end()
 
-                ->scalarNode('yahoo_url')
-                    ->cannotBeEmpty()
-                    ->defaultValue('https://query.yahooapis.com/v1/public/yql')
-                ->end()
-
                 ->scalarNode('alpha_api_key')
                     ->cannotBeEmpty()
                     ->defaultValue(null)
