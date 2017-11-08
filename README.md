@@ -4,7 +4,6 @@ Overview
 This Symfony2 bundle provide a service and a twig extension to convert and display currencies.
 
 [![Build Status](https://secure.travis-ci.org/lexik/LexikCurrencyBundle.png?branch=master)](http://travis-ci.org/lexik/LexikCurrencyBundle)
-![Project Status](http://stillmaintained.com/lexik/LexikCurrencyBundle.png)
 [![Latest Stable Version](https://poser.pugx.org/lexik/currency-bundle/v/stable)](https://packagist.org/packages/lexik/currency-bundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/04079218-2ad1-439d-bfab-1c931468147c/mini.png)](https://insight.sensiolabs.com/projects/04079218-2ad1-439d-bfab-1c931468147c)
 
@@ -77,7 +76,7 @@ To initialize the currencies rate in the database run the following command:
 ```
 
 Example by using the ECB adapter, to get rates from the European Central Bank.
-In the commanda line `ecb` is the value returned by the `getIdentifier()` method of the adapter class.
+In the command line `ecb` is the value returned by the `getIdentifier()` method of the adapter class.
 
 ```
 ./app/console lexik:currency:import ecb
@@ -201,6 +200,15 @@ Then define the adapter as a service, don't forget the `lexik_currency.adapter` 
 
 ```xml
 <service id="my_project.rainbow_currency_adapter" class="MyProject\With\Some\Rainbows\RainbowCurrencyAdapter">
+    <call method="setDefaultCurrency">
+        <argument>%lexik_currency.currencies.default%</argument>
+    </call>
+    <call method="setManagedCurrencies">
+        <argument>%lexik_currency.currencies.managed%</argument>
+    </call>
+    <call method="setCurrencyClass">
+        <argument>%lexik_currency.currency_class%</argument>
+    </call>
     <tag name="lexik_currency.adapter" alias="rainbow_currency_adapter" />
 </service>
 ```
