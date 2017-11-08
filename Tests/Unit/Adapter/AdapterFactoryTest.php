@@ -29,12 +29,12 @@ class AdapterFactoryTest extends BaseUnitTestCase
         $this->assertEquals(0, count($adapter));
     }
 
-    public function testCreateYahooAdapter()
+    public function testCreateAlphaAdapter()
     {
         $factory = new AdapterFactory($this->doctrine, 'EUR', array('EUR', 'USD'), self::CURRENCY_ENTITY);
-        $adapter = $factory->createYahooAdapter();
+        $adapter = $factory->createAlphaAdapter();
 
-        $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\YahooCurrencyAdapter', $adapter);
+        $this->assertInstanceOf('Lexik\Bundle\CurrencyBundle\Adapter\AlphaCurrencyAdapter', $adapter);
         $this->assertEquals('EUR', $adapter->getDefaultCurrency());
         $this->assertEquals(array('EUR', 'USD'), $adapter->getManagedCurrencies());
         $this->assertEquals(0, count($adapter));

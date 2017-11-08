@@ -106,14 +106,14 @@ class AdapterFactory
     }
 
     /**
-     * Create an YahooCurrencyAdapter.
+     * Create an AlphaCurrencyAdapter.
      *
-     * @return Lexik\Bundle\CurrencyBundle\Adapter\YahooCurrencyAdapter
+     * @return Lexik\Bundle\CurrencyBundle\Adapter\AlphaCurrencyAdapter
      */
-    public function createYahooAdapter($adapterClass = null)
+    public function createAlphaAdapter($adapterClass = null)
     {
         if (null == $adapterClass) {
-            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\YahooCurrencyAdapter';
+            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\AlphaCurrencyAdapter';
         }
 
         return $this->create($adapterClass);
