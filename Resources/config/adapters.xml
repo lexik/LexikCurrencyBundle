@@ -11,6 +11,7 @@
         <parameter key="lexik_currency.ecb_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter</parameter>
         <parameter key="lexik_currency.oer_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\OerCurrencyAdapter</parameter>
         <parameter key="lexik_currency.yahoo_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\YahooCurrencyAdapter</parameter>
+        <parameter key="lexik_currency.alpha_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\AlphaCurrencyAdapter</parameter>
         <parameter key="lexik_currency.doctrine_adapter.class">Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter</parameter>
         <parameter key="lexik_currency.doctrine.orm.entity_manager">default</parameter>
     </parameters>
@@ -62,6 +63,14 @@
                 <argument>%lexik_currency.yahoo_url%</argument>
             </call>
             <tag name="lexik_currency.adapter" alias="yahoo_currency_adapter" />
+        </service>
+
+        <service id="lexik_currency.alpha_adapter" class="%lexik_currency.alpha_adapter.class%" parent="lexik_currency.abstract_adapter">
+            <factory service="lexik_currency.adapter_factory" method="createAlphaAdapter" />
+            <call method="setApiKey">
+                <argument>%lexik_currency.alpha_api_key%</argument>
+            </call>
+            <tag name="lexik_currency.adapter" alias="alpha_currency_adapter" />
         </service>
     </services>
 

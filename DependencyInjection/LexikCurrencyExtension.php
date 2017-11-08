@@ -31,6 +31,7 @@ class LexikCurrencyExtension extends Extension
         $container->setParameter('lexik_currency.oer_url', $config['oer_url']);
         $container->setParameter('lexik_currency.oer_app_id', $config['oer_app_id']);
         $container->setParameter('lexik_currency.yahoo_url', $config['yahoo_url']);
+        $container->setParameter('lexik_currency.alpha_api_key', $config['alpha_api_key']);
         $container->setParameter('lexik_currency.decimal_part.precision', $config['decimal_part']['precision']);
         $container->setParameter('lexik_currency.decimal_part.round_mode', $config['decimal_part']['round_mode']);
 

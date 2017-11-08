@@ -118,4 +118,18 @@ class AdapterFactory
 
         return $this->create($adapterClass);
     }
+
+    /**
+     * Create an AlphaCurrencyAdapter.
+     *
+     * @return Lexik\Bundle\CurrencyBundle\Adapter\AlphaCurrencyAdapter
+     */
+    public function createAlphaAdapter($adapterClass = null)
+    {
+        if (null == $adapterClass) {
+            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\AlphaCurrencyAdapter';
+        }
+
+        return $this->create($adapterClass);
+    }
 }
