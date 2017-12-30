@@ -26,7 +26,6 @@ env:
     - SYMFONY_VERSION=4.0.*
 
 before_install:
-    - curl -sSf -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar
     - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
     - composer require doctrine/doctrine-bundle:~1.5 --no-update
     - composer require doctrine/orm:~2.4 --no-update
