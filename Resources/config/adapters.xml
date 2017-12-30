@@ -17,7 +17,7 @@
 
     <services>
         <!-- Adapter collector -->
-        <service id="lexik_currency.adapter_collector" class="%lexik_currency.adapter_collector.class%" />
+        <service id="lexik_currency.adapter_collector" class="%lexik_currency.adapter_collector.class%" public="true" />
 
         <!-- Factory -->
         <service id="lexik_currency.adapter_factory" class="%lexik_currency.adapter_factory.class%">
