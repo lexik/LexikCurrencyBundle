@@ -9,11 +9,13 @@
         <parameter key="lexik_currency.converter.class">Lexik\Bundle\CurrencyBundle\Currency\Converter</parameter>
         <parameter key="lexik_currency.formatter.class">Lexik\Bundle\CurrencyBundle\Currency\Formatter</parameter>
         <parameter key="lexik_currency.subscriber.locale.class">Lexik\Bundle\CurrencyBundle\EventListener\LocaleListener</parameter>
+        <parameter key="lexik_currency.command.import_currency.class">Lexik\Bundle\CurrencyBundle\Command\ImportCurrencyCommand</parameter>
     </parameters>
 
     <services>
         <service id="lexik_currency.currency_extension" class="%lexik_currency.currency_extension.class%" public="false">
-            <argument type="service" id="service_container" />
+            <argument type="service" id="lexik_currency.formatter" />
+            <argument type="service" id="lexik_currency.converter" />
             <tag name="twig.extension" />
         </service>
 
@@ -30,6 +32,13 @@
         <service id="lexik_currency.subscriber.locale" class="%lexik_currency.subscriber.locale.class%">
             <argument type="service" id="lexik_currency.formatter" />
             <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="lexik_currency.command.import_currency" class="%lexik_currency.command.import_currency.class%">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="lexik_currency.adapter_collector" />
+            <argument>%lexik_currency.currency_class%</argument>
+            <tag name="console.command" />
         </service>
     </services>
 </container>
