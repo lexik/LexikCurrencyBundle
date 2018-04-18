@@ -7,7 +7,7 @@ use InvalidArgumentException;
 /**
  * @author Yoann Aparici <y.aparici@lexik.fr>
  */
-final class AdapterCollector
+final class AdapterCollector implements AdapterCollectorInterface
 {
     private $elements = array();
 
