@@ -9,19 +9,8 @@ interface ConverterInterface
 {
     /**
      * Convert from default currency to another.
-     *
-     * @param float   $value
-     * @param string  $targetCurrency
-     * @param boolean $round
-     * @param string  $valueCurrency
-     * @return float
      */
-    public function convert($value, $targetCurrency, $round = true, $valueCurrency = null);
+    public function convert(float $value, string $targetCurrency, bool $round = true, string $valueCurrency = null): float;
 
-    /**
-     * Get default currency.
-     *
-     * @return string
-     */
-    public function getDefaultCurrency();
+    public function getDefaultCurrency(): string;
 }

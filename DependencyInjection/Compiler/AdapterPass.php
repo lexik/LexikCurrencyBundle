@@ -2,8 +2,8 @@
 
 namespace Lexik\Bundle\CurrencyBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -11,13 +11,13 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AdapterPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         // Attach all adapter to the adapter collector
         $definition = $container->getDefinition('lexik_currency.adapter_collector');
 
-        foreach ($container->findTaggedServiceIds('lexik_currency.adapter') as $id => $attributes) {
-            $definition->addMethodCall('add', array(new Reference($id)));
+        foreach (array_keys($container->findTaggedServiceIds('lexik_currency.adapter')) as $id) {
+            $definition->addMethodCall('add', [new Reference($id)]);
         }
 
         // set default adapter alias

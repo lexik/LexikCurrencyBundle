@@ -9,26 +9,17 @@ use InvalidArgumentException;
  */
 final class AdapterCollector
 {
-    private $elements = array();
-
     /**
-     * Add an adapter
-     *
-     * @param mixed $key
-     * @param AbstractCurrencyAdapter $adapter
+     * @var array<string, AbstractCurrencyAdapter>
      */
-    public function add(AbstractCurrencyAdapter $adapter)
+    private array $elements = [];
+
+    public function add(AbstractCurrencyAdapter $adapter): void
     {
         $this->elements[$adapter->getIdentifier()] = $adapter;
     }
 
-    /**
-     * Get adapter
-     *
-     * @param mixed $key
-     * @return AbstractCurrencyAdapter
-     */
-    public function get($key)
+    public function get(string $key): AbstractCurrencyAdapter
     {
         if (!isset($this->elements[$key])) {
             throw new InvalidArgumentException('Adapter does not exist');
@@ -36,5 +27,4 @@ final class AdapterCollector
 
         return $this->elements[$key];
     }
-
 }

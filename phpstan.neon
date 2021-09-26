@@ -1,0 +1,19 @@
+
+parameters:
+
+    level: 9
+
+    paths:
+        - Adapter
+        - Command
+        - Currency
+        - DependencyInjection
+        - Entity
+        - EventListener
+        - Exception
+        - Resources
+        - Tests
+        - Twig
+
+    ignoreErrors:
+        - '#NodeDefinition::addDefaultsIfNotSet\(\)#'

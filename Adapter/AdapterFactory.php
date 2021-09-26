@@ -2,55 +2,44 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 
 /**
- * This class is used to create DoctrineCurrencyAdapter
- *
  * @author Yoann Aparici <y.aparici@lexik.fr>
  * @author Cédric Girard <c.girard@lexik.fr>
  */
 class AdapterFactory
 {
     /**
-     * @var EntityManager
+     * @var array{default: string, managed: array<string>}
      */
-    protected $doctrine;
+    private array $currencies;
 
     /**
-     * @var array
+     * @param Registry $doctrine
+     * @param string $defaultCurrency
+     * @param array<string> $availableCurrencies
+     * @param class-string $currencyClass
      */
-    private $currencies;
-
-    /**
-     * @var string
-     */
-    private $currencyClass;
-
-    /**
-     * __construct
-     *
-     * @param EntityManager $em
-     */
-    public function __construct(Registry $doctrine, $defaultCurrency, $availableCurrencies, $currencyClass)
-    {
-        $this->doctrine = $doctrine;
-
-        $this->currencies = array();
-        $this->currencies['default'] = $defaultCurrency;
-        $this->currencies['managed'] = $availableCurrencies;
-        $this->currencyClass = $currencyClass;
+    public function __construct(
+        protected Registry $doctrine,
+        string $defaultCurrency,
+        array $availableCurrencies,
+        private string $currencyClass
+    ) {
+        $this->currencies = [
+            'default' => $defaultCurrency,
+            'managed' => $availableCurrencies
+        ];
     }
 
     /**
-     * Create an adaper from the given class.
-     *
-     * @param string $adapterClass
-     * @return Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter
+     * @param class-string $adapterClass
      */
-    public function create($adapterClass)
+    public function create(string $adapterClass): AbstractCurrencyAdapter
     {
+        /** @var AbstractCurrencyAdapter $adapter */
         $adapter = new $adapterClass();
         $adapter->setDefaultCurrency($this->currencies['default']);
         $adapter->setManagedCurrencies($this->currencies['managed']);
@@ -60,17 +49,17 @@ class AdapterFactory
     }
 
     /**
-     * Create a DoctrineCurrencyAdapter.
-     *
-     * @return Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter
+     * @param ?class-string $adapterClass
      */
-    public function createDoctrineAdapter($adapterClass = null, $entityManagerName = null)
+    public function createDoctrineAdapter(string $adapterClass = null, string $entityManagerName = null): AbstractCurrencyAdapter
     {
         if (null == $adapterClass) {
-            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter';
+            $adapterClass = DoctrineCurrencyAdapter::class;
         }
+        /** @var DoctrineCurrencyAdapter $adapter */
         $adapter = $this->create($adapterClass);
 
+        /** @var EntityManager $em */
         $em = $this->doctrine->getManager($entityManagerName);
         $adapter->setManager($em);
 
@@ -78,42 +67,36 @@ class AdapterFactory
     }
 
     /**
-     * Create an EcbCurrencyAdapter.
-     *
-     * @return Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter
+     * @param ?class-string $adapterClass
      */
-    public function createEcbAdapter($adapterClass = null)
+    public function createEcbAdapter(string $adapterClass = null): AbstractCurrencyAdapter
     {
         if (null == $adapterClass) {
-            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\EcbCurrencyAdapter';
+            $adapterClass = EcbCurrencyAdapter::class;
         }
 
         return $this->create($adapterClass);
     }
 
     /**
-     * Create an OerCurrencyAdapter.
-     *
-     * @return Lexik\Bundle\CurrencyBundle\Adapter\OerCurrencyAdapter
+     * @param ?class-string $adapterClass
      */
-    public function createOerAdapter($adapterClass = null)
+    public function createOerAdapter(string $adapterClass = null): AbstractCurrencyAdapter
     {
         if (null == $adapterClass) {
-            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\OerCurrencyAdapter';
+            $adapterClass = OerCurrencyAdapter::class;
         }
 
         return $this->create($adapterClass);
     }
 
     /**
-     * Create an YahooCurrencyAdapter.
-     *
-     * @return Lexik\Bundle\CurrencyBundle\Adapter\YahooCurrencyAdapter
+     * @param ?class-string $adapterClass
      */
-    public function createYahooAdapter($adapterClass = null)
+    public function createYahooAdapter(string $adapterClass = null): AbstractCurrencyAdapter
     {
         if (null == $adapterClass) {
-            $adapterClass = 'Lexik\Bundle\CurrencyBundle\Adapter\YahooCurrencyAdapter';
+            $adapterClass = YahooCurrencyAdapter::class;
         }
 
         return $this->create($adapterClass);

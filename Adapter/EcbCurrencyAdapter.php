@@ -2,36 +2,28 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
+use SimpleXMLElement;
+
 /**
  * @author Cédric Girard <c.girard@lexik.fr>
  * @author Yoann Aparici <y.aparici@lexik.fr>
  */
 class EcbCurrencyAdapter extends AbstractCurrencyAdapter
 {
-    /**
-     * @var string
-     */
-    private $ecbUrl;
+    private string $ecbUrl;
 
-    /**
-     * Set the ECB url.
-     *
-     * @param string $url
-     */
-    public function setEcbUrl($url)
+    public function setEcbUrl(string $url): void
     {
         $this->ecbUrl = $url;
     }
 
-    /**
-     * Init object storage
-     */
-    public function attachAll()
+    public function attachAll(): void
     {
         $defaultRate = 1;
 
-        // Add euro
-        $euro = new $this->currencyClass;
+        /** @var Currency $euro */
+        $euro = new $this->currencyClass();
         $euro->setCode('EUR');
         $euro->setRate(1);
 
@@ -40,16 +32,23 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
         // Get other currencies
         $xml = @simplexml_load_file($this->ecbUrl);
 
-        if ($xml instanceof \SimpleXMLElement) {
+        if ($xml instanceof SimpleXMLElement) {
+            /** @var array<int, SimpleXMLElement> $data */
             $data = $xml->xpath('//gesmes:Envelope/*[3]/*');
 
+            /** @var SimpleXMLElement $child */
             foreach ($data[0]->children() as $child) {
-                $code = (string) $child->attributes()->currency;
+
+                /** @var SimpleXMLElement $row */
+                $row = $child->attributes();
+
+                $code = (string) $row->currency;
 
                 if (in_array($code, $this->managedCurrencies)) {
-                    $currency = new $this->currencyClass;
+                    /** @var Currency $currency */
+                    $currency = new $this->currencyClass();
                     $currency->setCode($code);
-                    $currency->setRate((string) $child->attributes()->rate);
+                    $currency->setRate((float) $row->rate);
 
                     $this[$currency->getCode()] = $currency;
                 }
@@ -63,10 +62,7 @@ class EcbCurrencyAdapter extends AbstractCurrencyAdapter
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'ecb';
     }

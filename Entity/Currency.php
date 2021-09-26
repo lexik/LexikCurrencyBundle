@@ -9,85 +9,48 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Currency
 {
-    /**
-     * @var int
-     */
-    protected $id;
+    protected int $id;
 
     /**
      * @Assert\Length(min=3)
      * @Assert\Length(max=3)
      * @Assert\NotBlank()
      * @Assert\Type(type="string")
-     *
-     * @var string
      */
-    protected $code;
+    protected string $code;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Type(type="numeric")
-     *
-     * @var string
      */
-    protected $rate;
+    protected float $rate;
 
-    /**
-     * Get ID
-     *
-     * @return string
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * Set code
-     *
-     * @param string $code
-     */
-    public function setCode($code)
+    public function setCode(string $code): void
     {
         $this->code = $code;
     }
 
-    /**
-     * Get rate
-     *
-     * @return string
-     */
-    public function getRate()
+    public function getRate(): float
     {
         return $this->rate;
     }
 
-    /**
-     * Set rate
-     *
-     * @param string $rate
-     */
-    public function setRate($rate)
+    public function setRate(float $rate): void
     {
         $this->rate = $rate;
     }
 
-    /**
-     * Convert currency rate
-     *
-     * @param float $rate
-     */
-    public function convert($rate)
+    public function convert(float $rate): void
     {
         $this->rate /= $rate;
     }
