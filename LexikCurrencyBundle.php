@@ -3,8 +3,8 @@
 namespace Lexik\Bundle\CurrencyBundle;
 
 use Lexik\Bundle\CurrencyBundle\DependencyInjection\Compiler\AdapterPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class LexikCurrencyBundle extends Bundle
 {

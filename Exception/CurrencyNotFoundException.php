@@ -8,8 +8,8 @@ namespace Lexik\Bundle\CurrencyBundle\Exception;
  */
 class CurrencyNotFoundException extends \InvalidArgumentException
 {
-    public function __construct($currency)
+    public function __construct(string $currency)
     {
-        parent::__construct(sprintf('Can\'t find currency: "%s"', $currency));
+        parent::__construct(sprintf('Cannot find currency: "%s"', $currency));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
 use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
 
 /**
@@ -12,82 +13,58 @@ use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
  */
 class OerCurrencyAdapter extends AbstractCurrencyAdapter
 {
-    /**
-     * @var string
-     */
-    private $url;
+    private string $url;
 
-    /**
-     * @var string
-     */
-    private $appId;
+    private ?string $appId = null;
 
-    /**
-     * Set the OER url.
-     *
-     * @param string $url
-     */
-    public function setOerUrl($url)
+    public function setOerUrl(string $url): void
     {
         $this->url = $url;
     }
 
-	/**
-	 * Sets the app-id
-	 *
-	 * @param string $appId
-	 */
-	public function setOerAppId($appId)
-	{
-		$this->appId = $appId;
-	}
+    public function setOerAppId(?string $appId): void
+    {
+        $this->appId = $appId;
+    }
 
-
-    /**
-     * Init object storage
-     */
-    public function attachAll()
+    public function attachAll(): void
     {
         // Get other currencies
         $data = @file_get_contents($this->getUrl());
-		$data = @json_decode($data, true);
+        $data = @json_decode((string) $data, true, 512, JSON_THROW_ON_ERROR);
 
-		if($data && is_array($data) && isset($data['rates']))
-		{
-			$data = $data['rates'];
-			foreach($this->managedCurrencies as $code)
-			{
-				if(isset($data[$code]))
-				{
-                    $currency = new $this->currencyClass;
+        if ($data && is_array($data) && isset($data['rates'])) {
+            $data = $data['rates'];
+            foreach ($this->managedCurrencies as $code) {
+                if (isset($data[$code])) {
+                    /** @var Currency $currency */
+                    $currency = new $this->currencyClass();
                     $currency->setCode($code);
                     $currency->setRate($data[$code]);
 
                     $this[$code] = $currency;
-				}
-			}
+                }
+            }
 
             if (isset($this[$this->defaultCurrency])) {
                 $defaultRate = $this[$this->defaultCurrency]->getRate();
+            } else {
+                throw new CurrencyNotFoundException("Your default currency is not supported by Oer provider");
             }
-			else
-				throw new CurrencyNotFoundException("Your default currency is not supported by Oer provider");
 
             $this->convertAll($defaultRate);
         }
     }
 
-	public function getUrl()
-	{
-		if(!$this->appId)
-			throw new \InvalidArgumentException('OER_APP_ID must be set in order to use OerCurrencyAdapter');
-		return sprintf("%s?app_id=%s", $this->url, $this->appId);
-	}
+    public function getUrl(): string
+    {
+        if ($this->appId === '' || $this->appId === '0') {
+            throw new \InvalidArgumentException('OER_APP_ID must be set in order to use OerCurrencyAdapter');
+        }
+        return sprintf("%s?app_id=%s", $this->url, $this->appId);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'oer';
     }

@@ -2,10 +2,10 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Tests\Fixtures;
 
-use Lexik\Bundle\CurrencyBundle\Entity\Currency;
-
 use Doctrine\Common\DataFixtures\FixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+
+use Doctrine\Persistence\ObjectManager;
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
 
 /**
  * Tests fixtures class.
@@ -14,15 +14,12 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class CurrencyData implements FixtureInterface
 {
-    /**
-     * @see Doctrine\Common\DataFixtures.FixtureInterface::load()
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $values = array(
-            array('code' => 'EUR', 'rate' => 1),
-            array('code' => 'USD', 'rate' => 1.3),
-        );
+        $values = [
+            ['code' => 'EUR', 'rate' => 1.0],
+            ['code' => 'USD', 'rate' => 1.3],
+        ];
 
         foreach ($values as $data) {
             $currency = new Currency();

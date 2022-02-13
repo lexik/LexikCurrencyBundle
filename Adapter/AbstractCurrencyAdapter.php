@@ -2,114 +2,91 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
+use ArrayIterator;
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
+
 /**
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  * @author Yoann Aparici <y.aparici@lexik.fr>
+ * @extends ArrayIterator<string, Currency>
  */
-abstract class AbstractCurrencyAdapter extends \ArrayIterator
+abstract class AbstractCurrencyAdapter extends ArrayIterator
 {
-    /**
-     * @var string
-     */
-    protected $defaultCurrency;
+    protected string $defaultCurrency;
 
     /**
-     * @var array
+     * @var array<string>
      */
-    protected $managedCurrencies = array();
+    protected array $managedCurrencies = [];
 
     /**
-     * @var string
+     * @var class-string
      */
-    protected $currencyClass;
+    protected string $currencyClass;
 
-    /**
-     * Set default currency
-     *
-     * @param string $defaultCurrency
-     */
-    public function setDefaultCurrency($defaultCurrency)
+    public function setDefaultCurrency(string $defaultCurrency): void
     {
         $this->defaultCurrency = $defaultCurrency;
     }
 
-    /**
-     * Get default currency
-     *
-     * @return string
-     */
-    public function getDefaultCurrency()
+    public function getDefaultCurrency(): string
     {
         return $this->defaultCurrency;
     }
 
     /**
-     * Get managedCurrencies
-     *
-     * @param array $currencies
+     * @param array<string> $currencies
      */
-    public function setManagedCurrencies($currencies)
+    public function setManagedCurrencies(array $currencies): void
     {
         $this->managedCurrencies = $currencies;
     }
 
     /**
-     * Get managedCurrencies
-     *
-     * @return array
+     * @return array<string>
      */
-    public function getManagedCurrencies()
+    public function getManagedCurrencies(): array
     {
         return $this->managedCurrencies;
     }
 
     /**
-     * Get managedCurrencies
-     *
-     * @return array
+     * @param class-string $currencyClass
      */
-    public function setCurrencyClass($currencyClass)
+    public function setCurrencyClass(string $currencyClass): void
     {
-        return $this->currencyClass = $currencyClass;
+        $this->currencyClass = $currencyClass;
     }
 
     /**
-     * Set object
-     *
-     * @param mixed $index
-     * @param Currency $newval
-     */
-    public function offsetSet($index, $newval)
-    {
-        if (!$newval instanceof $this->currencyClass) {
-            throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', get_class($newval)));
-        }
-
-        parent::offsetSet($index, $newval);
-    }
-
-    /**
-     * Append a value
-     *
+     * @param string $key
      * @param Currency $value
      */
-    public function append($value)
+    public function offsetSet($key, $value): void
     {
         if (!$value instanceof $this->currencyClass) {
-            throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', get_class($value)));
+            throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', $value::class));
+        }
+
+        parent::offsetSet($key, $value);
+    }
+
+    /**
+     * @param Currency $value
+     */
+    public function append($value): void
+    {
+        if (!$value instanceof $this->currencyClass) {
+            throw new \InvalidArgumentException(sprintf('$newval must be an instance of Currency, instance of "%s" given', $value::class));
         }
 
         parent::append($value);
     }
 
-    /**
-     * Convert all
-     *
-     * @param mixed $rate
-     */
-    protected function convertAll($rate)
+    protected function convertAll(float $rate): void
     {
+        /** @var Currency $currency */
         foreach ($this as $currency) {
             $currency->convert($rate);
         }
@@ -119,13 +96,11 @@ abstract class AbstractCurrencyAdapter extends \ArrayIterator
      * This method is used by the constructor
      * to attach all currencies.
      */
-    abstract public function attachAll();
+    abstract public function attachAll(): void;
 
     /**
-     * Get identier value for the adapter must be unique
+     * Get identifier value for the adapter must be unique
      * for all the project
-     *
-     * @return string
      */
-    abstract protected function getIdentifier();
+    abstract public function getIdentifier(): string;
 }

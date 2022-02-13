@@ -3,6 +3,9 @@
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
 
 /**
  * @author Yoann Aparici <y.aparici@lexik.fr>
@@ -10,46 +13,21 @@ use Doctrine\ORM\EntityManager;
  */
 class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
 {
-    /**
-     * @var EntityManager
-     */
-    private $manager;
+    private EntityManager $manager;
 
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private bool $initialized = false;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attachAll()
+    public function attachAll(): void
     {
         // nothing here
     }
 
-    /**
-     * Return identifier
-     *
-     * @return string
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'doctrine';
     }
 
-    /**
-     * @param EntityManager $manager
-     */
-    public function setManager(EntityManager $manager)
-    {
-        $this->manager = $manager;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetExists($index)
+    public function offsetExists($index): bool
     {
         if (!$this->isInitialized()) {
             $this->initialize();
@@ -58,30 +36,29 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
         return parent::offsetExists($index);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetGet($index)
+    public function setManager(EntityManager $manager): void
+    {
+        $this->manager = $manager;
+    }
+
+    public function offsetGet(mixed $key): mixed
     {
         if (!$this->isInitialized()) {
             $this->initialize();
         }
 
-        return parent::offsetGet($index);
+        return parent::offsetGet($key);
     }
 
-    /**
-     * @return bool
-     */
-    private function isInitialized()
+    private function isInitialized(): bool
     {
         return $this->initialized;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    private function initialize()
+    private function initialize(): void
     {
         if (!isset($this->manager)) {
             throw new \RuntimeException('No ObjectManager set on DoctrineCurrencyAdapter.');
@@ -91,6 +68,7 @@ class DoctrineCurrencyAdapter extends AbstractCurrencyAdapter
             ->getRepository($this->currencyClass)
             ->findAll();
 
+        /** @var Currency $currency */
         foreach ($currencies as $currency) {
             $this[$currency->getCode()] = $currency;
         }

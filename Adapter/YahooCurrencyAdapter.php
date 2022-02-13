@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Adapter;
 
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
 use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
 
 /**
@@ -11,31 +12,19 @@ use Lexik\Bundle\CurrencyBundle\Exception\CurrencyNotFoundException;
  */
 class YahooCurrencyAdapter extends AbstractCurrencyAdapter
 {
-    /**
-     * @var string
-     */
-    private $yahooUrl;
+    private string $yahooUrl;
 
     /**
-     * @var array
+     * @var array<string>
      */
-    private $currencyCodes = array();
+    private array $currencyCodes = [];
 
-
-    /**
-     * Set the Yahoo! url.
-     *
-     * @param string $url
-     */
-    public function setYahooUrl($url)
+    public function setYahooUrl(string $url): void
     {
         $this->yahooUrl = $url;
     }
 
-    /**
-     * Init object storage
-     */
-    public function attachAll()
+    public function attachAll(): void
     {
         foreach ($this->managedCurrencies as $managedCurrency) {
             $this->addCurrency($managedCurrency);
@@ -44,7 +33,8 @@ class YahooCurrencyAdapter extends AbstractCurrencyAdapter
         $defaultRate = 1;
 
         // Add default currency (euro in this example)
-        $euro = new $this->currencyClass;
+        /** @var Currency $euro */
+        $euro = new $this->currencyClass();
         $euro->setCode('EUR');
         $euro->setRate($defaultRate);
 
@@ -52,20 +42,14 @@ class YahooCurrencyAdapter extends AbstractCurrencyAdapter
 
         // Build YQL query
         $strCodes = '';
-        foreach ($this->currencyCodes as $index=>$currencyCode) {
-            $strCodes .= "'EUR".$currencyCode."'";
+        foreach ($this->currencyCodes as $index => $currencyCode) {
+            $strCodes .= "'EUR" . $currencyCode . "'";
             if ($index != count($this->currencyCodes) - 1) {
                 $strCodes .= ", ";
             }
         }
 
-        $yqlQuery = "select id,Rate from yahoo.finance.xchange where pair in (".$strCodes.")";
-
-        $args = array(
-            'q' => $yqlQuery,
-            'format' => "json",
-            'env' => "store://datatables.org/alltableswithkeys",
-        );
+        $yqlQuery = "select id,Rate from yahoo.finance.xchange where pair in (" . $strCodes . ")";
 
         $yqlQueryURL = $this->yahooUrl
             . "?q=" . urlencode($yqlQuery)
@@ -74,19 +58,19 @@ class YahooCurrencyAdapter extends AbstractCurrencyAdapter
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $yqlQueryURL);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $json = curl_exec($ch);
 
         // Convert JSON response to PHP object
-        $data = json_decode($json);
-        $results = $data->query->results->rate;
+        $data = json_decode((string) $json, null, 512, JSON_THROW_ON_ERROR);
+        $results = $data->query->results->rate; // @phpstan-ignore-line
 
         // Check if query was okay and result is given
         if (is_null($results)) {
-            new \RuntimeException('YQL query failed!');
+            throw new \RuntimeException('YQL query failed!');
         }
 
-        $currencies = array();
+        $currencies = [];
 
         foreach ($results as $row) {
             $code = substr($row->id, 3);
@@ -97,7 +81,8 @@ class YahooCurrencyAdapter extends AbstractCurrencyAdapter
 
         foreach ($currencies as $code => $rate) {
             if (in_array($code, $this->managedCurrencies)) { // you can check if the currency is in the managed currencies
-                $currency = new $this->currencyClass;
+                /** @var Currency $currency */
+                $currency = new $this->currencyClass();
                 $currency->setCode($code);
                 $currency->setRate($rate);
 
@@ -114,21 +99,13 @@ class YahooCurrencyAdapter extends AbstractCurrencyAdapter
         $this->convertAll($defaultRate);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'yahoo';
     }
 
-    /**
-     * Add currency to the query
-     *
-     * @param $code
-     */
-    private function addCurrency($code) {
+    private function addCurrency(string $code): void
+    {
         $this->currencyCodes[] = $code;
     }
-
 }

@@ -2,7 +2,12 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\Persistence\ManagerRegistry;
+use Lexik\Bundle\CurrencyBundle\Adapter\AbstractCurrencyAdapter;
+use Lexik\Bundle\CurrencyBundle\Adapter\AdapterCollector;
+use Lexik\Bundle\CurrencyBundle\Adapter\DoctrineCurrencyAdapter;
+use Lexik\Bundle\CurrencyBundle\Entity\Currency;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,12 +17,23 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Cédric Girard <c.girard@lexik.fr>
  * @author Yoann Aparici <y.aparici@lexik.fr>
  */
-class ImportCurrencyCommand extends ContainerAwareCommand
+class ImportCurrencyCommand extends Command
 {
+    /**
+     * @param class-string $currencyClass
+     */
+    public function __construct(
+        private ManagerRegistry $managerRegistry,
+        private AdapterCollector $adapterCollector,
+        private string $currencyClass
+    ) {
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('lexik:currency:import')
@@ -30,37 +46,44 @@ class ImportCurrencyCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $adapter = $this->getContainer()
-            ->get('lexik_currency.adapter_collector')
-            ->get($input->getArgument('adapter'));
+        /** @var string $adapterName */
+        $adapterName = $input->getArgument('adapter');
+        $adapter = $this->adapterCollector->get($adapterName);
         $adapter->attachAll();
 
-        // Persist currencies
-        $entityManagerName = $input->getOption('em');
-        $em = $this->getContainer()->get('doctrine')->getManager($entityManagerName);
+        /** @var string $managerName */
+        $managerName = $input->getOption('em');
+        $entityManagerName = $managerName;
+        $em = $this->managerRegistry->getManager($entityManagerName);
 
-        $repository = $em->getRepository($this->getContainer()->getParameter('lexik_currency.currency_class'));
+        $repository = $em->getRepository($this->currencyClass);
 
         foreach ($adapter as $value) {
-            // Check if already exist
-            $currency = $repository->findOneBy(array(
+            $currency = $repository->findOneBy([
                 'code' => $value->getCode(),
-            ));
+            ]);
 
+            /** @var Currency|null $currency */
             if (!$currency) {
                 $currency = $value;
                 $em->persist($currency);
 
-                $output->writeln(sprintf('<comment>Add: %s = %s</comment>', $currency->getCode(), $currency->getRate()));
+                $output->writeln(
+                    sprintf('<comment>Add: %s = %s</comment>', $currency->getCode(), $currency->getRate())
+                );
             } else {
                 $currency->setRate($value->getRate());
 
-                $output->writeln(sprintf('<comment>Update: %s = %s</comment>', $currency->getCode(), $currency->getRate()));
+                $output->writeln(
+                    sprintf('<comment>Update: %s = %s</comment>', $currency->getCode(), $currency->getRate())
+                );
             }
         }
 
         $em->flush();
+
+        return Command::SUCCESS;
     }
 }

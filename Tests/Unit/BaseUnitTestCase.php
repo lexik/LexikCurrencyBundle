@@ -2,67 +2,53 @@
 
 namespace Lexik\Bundle\CurrencyBundle\Tests\Unit;
 
-use Lexik\Bundle\CurrencyBundle\Tests\Fixtures\CurrencyData;
-
-use Doctrine\ORM\EntityManager;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\DefaultQuoteStrategy;
+use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
+use Doctrine\ORM\Repository\DefaultRepositoryFactory;
+use Doctrine\ORM\Tools\SchemaTool;
+use Lexik\Bundle\CurrencyBundle\Tests\Fixtures\CurrencyData;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base unit test class providing functions to create a mock entity manger, load schema and fixtures.
  *
  * @author Cédric Girard <c.girard@lexik.fr>
  */
-abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseUnitTestCase extends TestCase
 {
-    /**
-     * Create the database schema.
-     *
-     * @param EntityManager $em
-     */
-    protected function createSchema(EntityManager $em)
+    public Registry $doctrine;
+
+    protected function createSchema(EntityManagerInterface $em): void
     {
-        $schemaTool = new \Doctrine\ORM\Tools\SchemaTool($em);
+        $schemaTool = new SchemaTool($em);
         $schemaTool->createSchema($em->getMetadataFactory()->getAllMetadata());
     }
 
-    /**
-     * Load test fixtures.
-     *
-     * @param EntityManager $om
-     */
-    protected function loadFixtures(EntityManager $em)
+    protected function loadFixtures(EntityManagerInterface $em): void
     {
         $purger = new ORMPurger();
         $executor = new ORMExecutor($em, $purger);
 
-        $executor->execute(array(new CurrencyData()), false);
+        $executor->execute([new CurrencyData()], false);
     }
 
     /**
      * EntityManager mock object together with annotation mapping driver and
      * pdo_sqlite database in memory
-     *
-     * @return EntityManager
      */
-    protected function getMockSqliteEntityManager()
+    protected function getMockSqliteEntityManager(): EntityManagerInterface
     {
-        $cache = new \Doctrine\Common\Cache\ArrayCache();
+        $xmlDriver = new SimplifiedXmlDriver([
+            __DIR__ . '/../../Resources/config/doctrine' => 'Lexik\Bundle\CurrencyBundle\Entity',
+        ]);
 
-        // xml driver
-        $xmlDriver = new \Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver(array(
-            __DIR__.'/../../Resources/config/doctrine' => 'Lexik\Bundle\CurrencyBundle\Entity',
-        ));
-
-        // configuration mock
-        $config = $this->getMock('Doctrine\ORM\Configuration');
-        $config->expects($this->any())
-            ->method('getMetadataCacheImpl')
-            ->will($this->returnValue($cache));
-        $config->expects($this->any())
-            ->method('getQueryCacheImpl')
-            ->will($this->returnValue($cache));
+        $config = $this->createMock(Configuration::class);
         $config->expects($this->once())
             ->method('getProxyDir')
             ->will($this->returnValue(sys_get_temp_dir()));
@@ -83,26 +69,24 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Doctrine\ORM\EntityRepository'));
         $config->expects($this->any())
             ->method('getRepositoryFactory')
-            ->will($this->returnValue(new \Doctrine\ORM\Repository\DefaultRepositoryFactory()));
+            ->will($this->returnValue(new DefaultRepositoryFactory()));
         $config->expects($this->any())
             ->method('getQuoteStrategy')
-            ->will($this->returnValue(new \Doctrine\ORM\Mapping\DefaultQuoteStrategy()));
+            ->will($this->returnValue(new DefaultQuoteStrategy()));
 
-        $conn = array(
+        $conn = [
             'driver' => 'pdo_sqlite',
             'memory' => true,
-        );
+        ];
 
-        $em = \Doctrine\ORM\EntityManager::create($conn, $config);
-
-        return $em;
+        return EntityManager::create($conn, $config);
     }
 
-    protected  function getMockDoctrine()
+    protected function getMockDoctrine(): Registry
     {
         $em = $this->getMockSqliteEntityManager();
 
-        $doctrine = $this->getMockBuilder('Doctrine\Bundle\DoctrineBundle\Registry')
+        $doctrine = $this->getMockBuilder(Registry::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -113,9 +97,10 @@ abstract class BaseUnitTestCase extends \PHPUnit_Framework_TestCase
         return $doctrine;
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManagerInterface
     {
         $em = $this->doctrine->getManager();
+        assert($em instanceof EntityManagerInterface);
 
         return $em;
     }
